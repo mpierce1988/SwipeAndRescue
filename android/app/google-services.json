@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "654567059361",
+    "project_id": "swipe-and-rescue",
+    "storage_bucket": "swipe-and-rescue.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654567059361:android:e2ffabb05b540a7e77e5e0",
+        "android_client_info": {
+          "package_name": "com.swipeandrescue.swipeandrescue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "654567059361-9fj4u324p2qnpoi05ivrd6saekqe1sh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_M-jCsreVKDF1bP8BoIG6nsRVig5d54o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654567059361-9fj4u324p2qnpoi05ivrd6saekqe1sh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
