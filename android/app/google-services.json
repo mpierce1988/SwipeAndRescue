@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "654567059361-nt2r6it6818n8jcpqee9v5rk9g9nmv5b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swipeandrescue.swipeandrescue",
+            "certificate_hash": "1c8cae864226000aafd065f039bc154267cff0d7"
+          }
+        },
+        {
           "client_id": "654567059361-9fj4u324p2qnpoi05ivrd6saekqe1sh2.apps.googleusercontent.com",
           "client_type": 3
         }
