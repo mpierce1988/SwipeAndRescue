@@ -4,11 +4,21 @@ import 'package:swipeandrescue/repository/user/firebase_user_repository.dart';
 import 'package:swipeandrescue/repository/user/user_repository.dart';
 
 class AuthenticationService {
+  /// Used to make AuthenticationService a singleton
+  static final AuthenticationService _instance =
+      AuthenticationService._internal();
+
+  /// Used to make AuthenticationService a singleton
+  factory AuthenticationService() {
+    return _instance;
+  }
+
   final UserRepository _userRepository = FirebaseUserRepository();
   User? user;
   late Stream userStream;
 
-  AuthenticationService() {
+  /// Used to make Authentication Service a singleton
+  AuthenticationService._internal() {
     user = _userRepository.user;
     userStream = _userRepository.userStream;
   }
