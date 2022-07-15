@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/firebase_options.dart';
 import 'package:swipeandrescue/services/auth_service.dart';
-import 'package:swipeandrescue/views/authenticate_screen.dart';
+import 'package:swipeandrescue/views/authenticate/authenticate_screen.dart';
 import 'package:swipeandrescue/views/home_screen.dart';
 
 void main() async {

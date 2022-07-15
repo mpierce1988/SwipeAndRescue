@@ -35,6 +35,14 @@ class AuthenticationService {
     return info;
   }
 
+  Future<UserAuthInfo> registerNewEmailUser(
+      String email, String password) async {
+    UserAuthInfo info =
+        await _userRepository.registerNewEmailUser(email, password);
+
+    return info;
+  }
+
   Future<UserAuthInfo> continueAsGuest() async {
     UserAuthInfo info = await _userRepository.continueAsGuest();
     return info;

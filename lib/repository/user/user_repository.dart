@@ -21,6 +21,12 @@ abstract class UserRepository {
     return UserAuthInfo();
   }
 
+  Future<UserAuthInfo> registerNewEmailUser(
+      String email, String password) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    return UserAuthInfo();
+  }
+
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }

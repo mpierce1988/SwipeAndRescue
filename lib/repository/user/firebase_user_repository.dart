@@ -80,4 +80,23 @@ class FirebaseUserRepository implements UserRepository {
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }
+
+  @override
+  Future<UserAuthInfo> registerNewEmailUser(
+      String email, String password) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      _user = FirebaseAuth.instance.currentUser;
+      _userStream = FirebaseAuth.instance.authStateChanges();
+      return UserAuthInfo(user: user, userStream: userStream);
+    } on FirebaseException catch (e) {
+      if (e.code == 'weak-password') {
+        debugPrint('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        debugPrint('An account already exists for that email.');
+      }
+      return UserAuthInfo();
+    }
+  }
 }
