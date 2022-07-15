@@ -3,7 +3,7 @@ import 'package:swipeandrescue/models/user_auth_info.dart';
 
 abstract class UserRepository {
   final user = FirebaseAuth.instance.currentUser;
-  final Stream? userStream = FirebaseAuth.instance.authStateChanges();
+  final Stream userStream = FirebaseAuth.instance.authStateChanges();
 
   Future<UserAuthInfo> authenticateWithGoogle() async {
     await Future.delayed(const Duration(milliseconds: 200));

@@ -5,8 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipeandrescue/repository/user/user_repository.dart';
 
 class FirebaseUserRepository implements UserRepository {
-  User? _user;
-  Stream? _userStream;
+  User? _user = FirebaseAuth.instance.currentUser;
+  Stream _userStream = FirebaseAuth.instance.authStateChanges();
+
   @override
   Future<UserAuthInfo> authenticateWithEmail(
       String email, String password) async {
@@ -73,7 +74,7 @@ class FirebaseUserRepository implements UserRepository {
   User? get user => _user;
 
   @override
-  Stream? get userStream => _userStream;
+  Stream get userStream => _userStream;
 
   @override
   Future<void> signOut() async {
