@@ -52,10 +52,15 @@ class AuthenticateController extends ChangeNotifier {
   }
 
   /// Sets the state variable based on authentication success/fail
-  _authenticationCheck(UserAuthInfo info) {
+  _authenticationCheck(UserAuthInfo info) async {
     // if user is null, authentication failed
     if (info.user == null) {
       _loginState = LoginState.authenticationFailed;
+      notifyListeners();
+      Future<void>.delayed(
+        const Duration(milliseconds: 200),
+      );
+      _loginState = LoginState.options;
       notifyListeners();
       return;
     }
