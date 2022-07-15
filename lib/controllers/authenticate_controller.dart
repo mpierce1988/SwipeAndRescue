@@ -25,21 +25,21 @@ class AuthenticateController extends ChangeNotifier {
   }
 
   /// Sign In/Authenticate with Google
-  authenticateWithGoogle() async {
+  Future<void> authenticateWithGoogle() async {
     UserAuthInfo info = await authService.authenticateWithGoogle();
 
     _authenticationCheck(info);
   }
 
   // Sign In/Authenticate with an email address and password
-  authenticateWithEmail(String email, String password) async {
+  Future<void> authenticateWithEmail(String email, String password) async {
     UserAuthInfo info =
         await authService.authenticateWithEmail(email, password);
     _authenticationCheck(info);
   }
 
   /// Sign in anonymously as a guest
-  continueAsGuest() async {
+  Future<void> continueAsGuest() async {
     UserAuthInfo info = await authService.continueAsGuest();
 
     _authenticationCheck(info);
