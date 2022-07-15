@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
+import 'package:swipeandrescue/services/validation_service.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class EmailRegistrationPage extends StatelessWidget {
@@ -30,7 +31,7 @@ class EmailRegistrationPage extends StatelessWidget {
                       labelText: 'Email *'),
                   controller: authController.emailRegistrationTextController,
                   validator: (value) {
-                    return authController.validateEmailAddress(value);
+                    return ValidationService().validateEmailAddress(value);
                   },
                 ),
                 TextFormField(
@@ -42,7 +43,7 @@ class EmailRegistrationPage extends StatelessWidget {
                     controller:
                         authController.password1RegistrationTextController,
                     validator: (value) {
-                      return authController.validatePassword(value);
+                      return ValidationService().validatePassword(value);
                     }),
                 TextFormField(
                     obscureText: true,
@@ -59,7 +60,7 @@ class EmailRegistrationPage extends StatelessWidget {
                               .password2RegistrationTextController.text) {
                         return 'The password fields must match';
                       }
-                      return authController.validatePassword(value);
+                      return ValidationService().validatePassword(value);
                     }),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,12 +69,13 @@ class EmailRegistrationPage extends StatelessWidget {
                         color: Colors.blue,
                         icon: Icons.adaptive.arrow_back,
                         text: "Back",
-                        loginMethod: authController.switchToLoginOptions),
+                        loginMethod: (context) =>
+                            authController.switchToLoginOptions()),
                     LoginButton(
                         color: Colors.red,
                         icon: Icons.app_registration,
                         text: "Register",
-                        loginMethod: () {
+                        loginMethod: (context) {
                           if (formKey.currentState!.validate()) {
                             authController.registerWithEmail();
                           }

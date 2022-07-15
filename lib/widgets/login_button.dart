@@ -4,7 +4,7 @@ class LoginButton extends StatelessWidget {
   final Color color;
   final IconData icon;
   final String text;
-  final Function loginMethod;
+  final Function(BuildContext context) loginMethod;
 
   const LoginButton(
       {Key? key,
@@ -17,7 +17,7 @@ class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () => loginMethod(),
+      onPressed: () => loginMethod(context),
       icon: Icon(
         icon,
         color: Colors.white,

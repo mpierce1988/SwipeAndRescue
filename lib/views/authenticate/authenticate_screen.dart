@@ -25,6 +25,7 @@ class AuthenticationScreen extends StatelessWidget {
         title: const Text('Login'),
       ),
       body: PageView(
+        scrollDirection: Axis.vertical,
         physics: const NeverScrollableScrollPhysics(),
         controller: authController.pageController,
         children: [

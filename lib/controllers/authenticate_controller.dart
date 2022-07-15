@@ -11,12 +11,16 @@ class AuthenticateController extends ChangeNotifier {
     _userStream = authService.userStream;
   }
 
+  // Fields
   LoginState _loginState = LoginState.options;
   final PageController _pageController = PageController(
     initialPage: 0,
   );
   User? _user;
   late Stream _userStream;
+  late BuildContext _currentContext;
+
+  // Properties
 
   final TextEditingController emailLoginTextController =
       TextEditingController();
@@ -48,19 +52,52 @@ class AuthenticateController extends ChangeNotifier {
     super.dispose();
   }
 
+// Authentication
+
   /// Sign In/Authenticate with Google
-  Future<void> authenticateWithGoogle() async {
-    UserAuthInfo info = await authService.authenticateWithGoogle();
+  Future<void> authenticateWithGoogle(BuildContext context) async {
+    _currentContext = context;
+
+    UserAuthInfo info = await authService
+        .authenticateWithGoogle()
+        .catchError(_displayErrorAsDialog);
 
     _authenticationCheck(info);
   }
 
   // Sign In/Authenticate with an email address and password
-  Future<void> authenticateWithEmail() async {
-    UserAuthInfo info = await authService.authenticateWithEmail(
-        emailLoginTextController.text, passwordLoginTextController.text);
+  Future<void> authenticateWithEmail(BuildContext context) async {
+    _currentContext = context;
+
+    try {
+      UserAuthInfo info = await authService
+          .authenticateWithEmail(
+              emailLoginTextController.text, passwordLoginTextController.text)
+          .catchError(_displayErrorAsDialog);
+      _authenticationCheck(info);
+    } on FirebaseException catch (e) {
+      debugPrint('! ${e.message}');
+    }
+  }
+
+  /// Sign in anonymously as a guest
+  Future<void> continueAsGuest(BuildContext context) async {
+    _currentContext = context;
+
+    UserAuthInfo info =
+        await authService.continueAsGuest().catchError(_displayErrorAsDialog);
+
     _authenticationCheck(info);
   }
+
+  /// Signs out of current user
+  Future<void> signOut(BuildContext context) async {
+    _currentContext = context;
+    _loginState = LoginState.options;
+    await authService.signOut().catchError(_displayErrorAsDialog);
+  }
+
+// Registration
 
   /// Registers a user with email and password
   Future<void> registerWithEmail() async {
@@ -69,16 +106,12 @@ class AuthenticateController extends ChangeNotifier {
         password1RegistrationTextController.text);
   }
 
-  /// Sign in anonymously as a guest
-  Future<void> continueAsGuest() async {
-    UserAuthInfo info = await authService.continueAsGuest();
-
-    _authenticationCheck(info);
-  }
+// State Management
 
   /// Switches the state to emailLogin and notifies listeners
   switchToEmailLogin() {
     loginState = LoginState.emailLogin;
+    _clearAllTextEditingControllers();
     _pageController.animateToPage(
       1,
       curve: Curves.easeOutQuad,
@@ -89,6 +122,7 @@ class AuthenticateController extends ChangeNotifier {
   /// Switches the state to emailRegistration and notifies the listeners
   switchToEmailRegistration() {
     loginState = LoginState.emailRegistration;
+    _clearAllTextEditingControllers();
     _pageController.animateToPage(
       2,
       curve: Curves.easeOutQuad,
@@ -96,32 +130,8 @@ class AuthenticateController extends ChangeNotifier {
     );
   }
 
-  String? validateEmailAddress(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter an email address';
-    }
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(value);
-    if (!emailValid) {
-      return 'Please enter a valid email address';
-    }
-
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-
-    if (value.length < 6) {
-      return 'Please enter a longer password (minimum 6 characters)';
-    }
-
-    return null;
-  }
-
+  /// Switches to the login options state, notifies listeners, and
+  /// animates the page to page 0
   switchToLoginOptions() async {
     loginState = LoginState.options;
     await _pageController.animateToPage(
@@ -131,11 +141,7 @@ class AuthenticateController extends ChangeNotifier {
     );
   }
 
-  /// Signs out of current user
-  Future<void> signOut() async {
-    _loginState = LoginState.options;
-    await authService.signOut();
-  }
+// Helper methods
 
   /// Sets the state variable based on authentication success/fail
   _authenticationCheck(UserAuthInfo info) async {
@@ -146,7 +152,7 @@ class AuthenticateController extends ChangeNotifier {
       Future<void>.delayed(
         const Duration(milliseconds: 200),
       );
-      switchToLoginOptions();
+      //switchToLoginOptions();
 
       return;
     }
@@ -158,5 +164,33 @@ class AuthenticateController extends ChangeNotifier {
     _userStream = info.userStream!;
 
     notifyListeners();
+  }
+
+  _clearAllTextEditingControllers() {
+    emailLoginTextController.text = '';
+    passwordLoginTextController.text = '';
+
+    emailRegistrationTextController.text = '';
+    password1RegistrationTextController.text = '';
+    password2RegistrationTextController.text = '';
+  }
+
+  _displayErrorAsDialog(dynamic error) {
+    FirebaseException e = error as FirebaseException;
+    debugPrint('${e.message}!');
+    showDialog(
+      context: _currentContext,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('An error has occured.'),
+        content: Text(e.message ?? 'An error has occured'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          )
+        ],
+      ),
+    );
+    return UserAuthInfo();
   }
 }

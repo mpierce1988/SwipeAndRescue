@@ -13,34 +13,37 @@ class LoginPage extends StatelessWidget {
         Provider.of<AuthenticateController>(context);
     return Padding(
       padding: const EdgeInsets.all(30),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Center(
-              child: FlutterLogo(
-                size: 200,
+      child: Flexible(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Center(
+                child: FlutterLogo(
+                  size: 200,
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            LoginButton(
-                color: Colors.blue,
-                icon: FontAwesomeIcons.google,
-                text: 'Sign in with Google',
-                loginMethod: authController.authenticateWithGoogle),
-            LoginButton(
-                color: Colors.red,
-                icon: Icons.email,
-                text: 'Sign in with Email',
-                loginMethod: authController.switchToEmailLogin),
-            LoginButton(
-                color: Colors.green,
-                icon: FontAwesomeIcons.userNinja,
-                text: 'Continue as Guest',
-                loginMethod: authController.continueAsGuest),
-          ]),
+              const SizedBox(
+                height: 20,
+              ),
+              LoginButton(
+                  color: Colors.blue,
+                  icon: FontAwesomeIcons.google,
+                  text: 'Sign in with Google',
+                  loginMethod: (c) =>
+                      authController.authenticateWithGoogle(context)),
+              LoginButton(
+                  color: Colors.red,
+                  icon: Icons.email,
+                  text: 'Sign in with Email',
+                  loginMethod: (c) => authController.switchToEmailLogin()),
+              LoginButton(
+                  color: Colors.green,
+                  icon: FontAwesomeIcons.userNinja,
+                  text: 'Continue as Guest',
+                  loginMethod: (c) => authController.continueAsGuest(context)),
+            ]),
+      ),
     );
   }
 }

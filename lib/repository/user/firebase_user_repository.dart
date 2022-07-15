@@ -11,21 +11,20 @@ class FirebaseUserRepository implements UserRepository {
   @override
   Future<UserAuthInfo> authenticateWithEmail(
       String email, String password) async {
-    try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+    //try {
+    final credential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
 
-      // set user and user stream variables
-      _user = FirebaseAuth.instance.currentUser;
-      _userStream = FirebaseAuth.instance.authStateChanges();
+    // set user and user stream variables
+    _user = FirebaseAuth.instance.currentUser;
+    _userStream = FirebaseAuth.instance.authStateChanges();
 
-      // return UserAuthInfo
-      return UserAuthInfo(user: user, userStream: userStream);
-    } on FirebaseException catch (e) {
-      // catch error in calling code
-      debugPrint(e.message);
-      return UserAuthInfo();
-    }
+    // return UserAuthInfo
+    return UserAuthInfo(user: user, userStream: userStream);
+    //} on FirebaseException catch (e) {
+    //  throw FirebaseException(plugin: e.plugin);
+    //  return UserAuthInfo();
+    //}
   }
 
   @override
