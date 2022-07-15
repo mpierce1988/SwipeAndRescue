@@ -39,4 +39,8 @@ class AuthenticationService {
     UserAuthInfo info = await _userRepository.continueAsGuest();
     return info;
   }
+
+  Future<void> signOut() async {
+    await _userRepository.signOut();
+  }
 }

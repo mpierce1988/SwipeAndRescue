@@ -51,6 +51,12 @@ class AuthenticateController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Signs out of current user
+  Future<void> signOut() async {
+    _loginState = LoginState.options;
+    await authService.signOut();
+  }
+
   /// Sets the state variable based on authentication success/fail
   _authenticationCheck(UserAuthInfo info) async {
     // if user is null, authentication failed

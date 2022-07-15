@@ -17,7 +17,7 @@ class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () => loginMethod,
+      onPressed: () => loginMethod(),
       icon: Icon(
         icon,
         color: Colors.white,

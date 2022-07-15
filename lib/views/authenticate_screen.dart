@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/models/login_state.dart';
-import 'package:swipeandrescue/services/auth_service.dart';
+import 'package:swipeandrescue/views/home_screen.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class AuthenticationScreen extends StatelessWidget {
@@ -11,6 +11,14 @@ class AuthenticationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticateController authController =
+        Provider.of<AuthenticateController>(context);
+
+    if (authController.loginState == LoginState.authenticationSuccessful) {
+      return const HomeScreen();
+    }
+
+    // else, its the options menu
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -33,25 +41,14 @@ class AuthenticationScreen extends StatelessWidget {
                   color: Colors.blue,
                   icon: FontAwesomeIcons.google,
                   text: 'Sign in with Google',
-                  loginMethod: _authenticateWithGoogle)
+                  loginMethod: authController.authenticateWithGoogle),
+              LoginButton(
+                  color: Colors.green,
+                  icon: FontAwesomeIcons.userNinja,
+                  text: 'Continue as Guest',
+                  loginMethod: authController.continueAsGuest),
             ]),
       ),
     );
-  }
-
-  _authenticateWithGoogle(BuildContext context) async {
-    debugPrint('Sign in with Google button is being pressed.');
-    await AuthenticationService().authenticateWithGoogle();
-
-    if (Provider.of<AuthenticateController>(context, listen: false)
-            .loginState ==
-        LoginState.authenticationFailed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Authentication Failed'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
   }
 }

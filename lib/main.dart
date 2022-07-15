@@ -5,6 +5,7 @@ import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/firebase_options.dart';
 import 'package:swipeandrescue/services/auth_service.dart';
 import 'package:swipeandrescue/views/authenticate_screen.dart';
+import 'package:swipeandrescue/views/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
               );
             } else if (snapshot.hasData) {
               // user is logged in
-              return const AuthenticationScreen();
+              return const HomeScreen();
             }
 
             // user is logged out
