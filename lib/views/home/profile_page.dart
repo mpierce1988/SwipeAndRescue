@@ -4,22 +4,26 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     AuthenticateController authController =
         Provider.of<AuthenticateController>(context);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Center(
-        child: LoginButton(
-          color: Colors.green,
-          icon: FontAwesomeIcons.doorOpen,
-          text: 'Logout',
-          loginMethod: authController.signOut,
+    return Container(
+      child: Center(
+        child: Column(
+          children: [
+            const Text('Profile'),
+            LoginButton(
+              color: Colors.green,
+              icon: FontAwesomeIcons.doorOpen,
+              text: 'Logout',
+              loginMethod: authController.signOut,
+            ),
+          ],
         ),
       ),
     );
