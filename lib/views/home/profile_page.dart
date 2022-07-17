@@ -12,19 +12,17 @@ class ProfilePage extends StatelessWidget {
     AuthenticateController authController =
         Provider.of<AuthenticateController>(context);
 
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            const Text('Profile'),
-            LoginButton(
-              color: Colors.green,
-              icon: FontAwesomeIcons.doorOpen,
-              text: 'Logout',
-              loginMethod: authController.signOut,
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        children: [
+          const Text('Profile'),
+          LoginButton(
+            color: Colors.green,
+            icon: FontAwesomeIcons.doorOpen,
+            text: 'Logout',
+            loginMethod: authController.signOut,
+          ),
+        ],
       ),
     );
   }

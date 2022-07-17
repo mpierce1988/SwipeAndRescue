@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/views/home/browse_animals_page.dart';
 import 'package:swipeandrescue/views/home/favourites_page.dart';
 import 'package:swipeandrescue/views/home/profile_page.dart';
@@ -24,17 +22,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AuthenticateController authController =
-        Provider.of<AuthenticateController>(context);
-
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: const [
+        children: [
           BrowseAnimalsPage(),
-          FavouritesPage(),
-          ProfilePage(),
+          const FavouritesPage(),
+          const ProfilePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

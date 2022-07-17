@@ -16,7 +16,7 @@ class AuthenticationScreen extends StatelessWidget {
         Provider.of<AuthenticateController>(context);
 
     if (authController.loginState == LoginState.authenticationSuccessful) {
-      return HomeScreen();
+      return const HomeScreen();
     }
 
     // else, its the options menu
