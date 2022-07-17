@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cloud_firestore: ^3.3.0
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.4.2
   firebase_core: ^1.19.2
@@ -34,10 +35,13 @@ dependencies:
     sdk: flutter
   font_awesome_flutter: ^10.1.0
   google_sign_in: ^5.4.0
+  json_annotation: ^4.6.0
+  json_serializable: ^6.3.1
   provider: ^6.0.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0
+  build_runner: ^2.2.0
   flutter_test:
     sdk: flutter
 
