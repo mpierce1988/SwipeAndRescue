@@ -5,7 +5,7 @@ import 'package:swipeandrescue/models/login_state.dart';
 import 'package:swipeandrescue/views/authenticate/email_login_page.dart';
 import 'package:swipeandrescue/views/authenticate/email_registration_page.dart';
 import 'package:swipeandrescue/views/authenticate/login_page.dart';
-import 'package:swipeandrescue/views/home_screen.dart';
+import 'package:swipeandrescue/views/home/home_screen.dart';
 
 class AuthenticationScreen extends StatelessWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);

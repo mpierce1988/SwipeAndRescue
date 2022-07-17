@@ -62,7 +62,7 @@ class AuthenticateController extends ChangeNotifier {
         .authenticateWithGoogle()
         .catchError(_displayErrorAsDialog);
 
-    _authenticationCheck(info);
+    _userIsAuthenticatedCheck(info);
   }
 
   // Sign In/Authenticate with an email address and password
@@ -74,7 +74,7 @@ class AuthenticateController extends ChangeNotifier {
           .authenticateWithEmail(
               emailLoginTextController.text, passwordLoginTextController.text)
           .catchError(_displayErrorAsDialog);
-      _authenticationCheck(info);
+      _userIsAuthenticatedCheck(info);
     } on FirebaseException catch (e) {
       debugPrint('! ${e.message}');
     }
@@ -87,7 +87,7 @@ class AuthenticateController extends ChangeNotifier {
     UserAuthInfo info =
         await authService.continueAsGuest().catchError(_displayErrorAsDialog);
 
-    _authenticationCheck(info);
+    _userIsAuthenticatedCheck(info);
   }
 
   /// Signs out of current user
@@ -144,7 +144,7 @@ class AuthenticateController extends ChangeNotifier {
 // Helper methods
 
   /// Sets the state variable based on authentication success/fail
-  _authenticationCheck(UserAuthInfo info) async {
+  _userIsAuthenticatedCheck(UserAuthInfo info) async {
     // if user is null, authentication failed
     if (info.user == null) {
       _loginState = LoginState.authenticationFailed;
