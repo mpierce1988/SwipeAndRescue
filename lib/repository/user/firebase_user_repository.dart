@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/models/user_auth_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipeandrescue/repository/user/user_repository.dart';
@@ -19,8 +21,14 @@ class FirebaseUserRepository implements UserRepository {
     _user = FirebaseAuth.instance.currentUser;
     _userStream = FirebaseAuth.instance.authStateChanges();
 
+    // TODO: Create AppUser from Users collection document
+    AppUser appUser = AppUser();
+
+    // update or create new user record
+    AppUser updatedAppUser = await updateUserRecord(appUser);
+
     // return UserAuthInfo
-    return UserAuthInfo(user: user, userStream: userStream);
+    return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
     //} on FirebaseException catch (e) {
     //  throw FirebaseException(plugin: e.plugin);
     //  return UserAuthInfo();
@@ -33,7 +41,7 @@ class FirebaseUserRepository implements UserRepository {
       final googleUser = await GoogleSignIn().signIn();
 
       // return empty user auth info if auth failed
-      if (googleUser == null) return UserAuthInfo();
+      if (googleUser == null) return UserAuthInfo(AppUser());
 
       // get Google auth information
       final googleAuth = await googleUser.authentication;
@@ -44,15 +52,21 @@ class FirebaseUserRepository implements UserRepository {
       // await sign in to firebase with google credentials
       await FirebaseAuth.instance.signInWithCredential(authCredential);
 
+      // TODO: Create AppUser from Users collection document
+      AppUser appUser = AppUser();
+
+      // update or create new user record
+      AppUser updatedAppUser = await updateUserRecord(appUser);
+
       // set user and stream variables
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
 
       // return UserAuthInfo
-      return UserAuthInfo(user: user, userStream: userStream);
+      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
   }
 
@@ -62,10 +76,17 @@ class FirebaseUserRepository implements UserRepository {
       await FirebaseAuth.instance.signInAnonymously();
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
-      return UserAuthInfo(user: user, userStream: userStream);
+
+// TODO: Create AppUser from Users collection document
+      AppUser appUser = AppUser();
+
+      // update or create new user record
+      AppUser updatedAppUser = await updateUserRecord(appUser);
+
+      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
   }
 
@@ -88,14 +109,59 @@ class FirebaseUserRepository implements UserRepository {
           .createUserWithEmailAndPassword(email: email, password: password);
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
-      return UserAuthInfo(user: user, userStream: userStream);
+
+      // TODO: Create AppUser from Users collection document
+      AppUser appUser = AppUser();
+
+      // update or create new user record
+      AppUser updatedAppUser = await updateUserRecord(appUser);
+
+      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
         debugPrint('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         debugPrint('An account already exists for that email.');
       }
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
   }
+
+  @override
+  Future<AppUser> updateUserRecord(AppUser appUser) async {
+    // get reference to the user document
+    var ref = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .get();
+
+    if (ref.exists) {
+      // update AppUser from auth service
+      appUser.displayName =
+          FirebaseAuth.instance.currentUser!.displayName ?? '';
+      appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+      // update document
+      var user = FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .set(appUser.toJson(), SetOptions(merge: true));
+      appUser.userId = ref.id;
+    } else {
+      // create document
+      // update appUser from auth service
+      appUser.displayName =
+          FirebaseAuth.instance.currentUser!.displayName ?? '';
+      appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+      // create new document with auto generated ID
+      final newUser = FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .set(appUser.toJson());
+    }
+
+    return appUser;
+  }
+
+  @override
+  AppUser appUser = AppUser();
 }

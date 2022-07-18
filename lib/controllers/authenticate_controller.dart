@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/models/login_state.dart';
 import 'package:swipeandrescue/models/user_auth_info.dart';
 import 'package:swipeandrescue/services/auth_service.dart';
@@ -19,6 +20,7 @@ class AuthenticateController extends ChangeNotifier {
   User? _user;
   late Stream _userStream;
   late BuildContext _currentContext;
+  late AppUser _appUser;
 
   // Properties
 
@@ -38,6 +40,7 @@ class AuthenticateController extends ChangeNotifier {
   User? get user => _user;
   Stream get userStream => _userStream;
   PageController get pageController => _pageController;
+  AppUser get appUser => _appUser;
 
   LoginState get loginState => _loginState;
   set loginState(LoginState newLoginState) {
@@ -162,6 +165,7 @@ class AuthenticateController extends ChangeNotifier {
 
     _user = info.user;
     _userStream = info.userStream!;
+    _appUser = info.appUser;
 
     notifyListeners();
   }
@@ -191,6 +195,6 @@ class AuthenticateController extends ChangeNotifier {
         ],
       ),
     );
-    return UserAuthInfo();
+    return UserAuthInfo(AppUser());
   }
 }
