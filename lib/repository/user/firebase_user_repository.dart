@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:swipeandrescue/models/app_user.dart';
+import 'package:swipeandrescue/models/shelter_model.dart';
 import 'package:swipeandrescue/models/user_auth_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipeandrescue/repository/user/user_repository.dart';
@@ -192,6 +193,8 @@ class FirebaseUserRepository implements UserRepository {
     appUser.displayName = FirebaseAuth.instance.currentUser!.displayName ?? '';
     appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
     appUser.userId = user.uid;
+    appUser.favouriteAnimals = [];
+    appUser.shelter = Shelter(shelterId: '', shelterName: '');
     // create new document with auto generated ID from auth service
     final newUser = await FirebaseFirestore.instance
         .collection('users')

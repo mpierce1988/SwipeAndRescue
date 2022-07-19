@@ -7,7 +7,7 @@ class AppUser {
   String email;
   String displayName;
   List<Animal> favouriteAnimals;
-  Shelter? shelter;
+  Shelter? shelter = Shelter(shelterId: '', shelterName: '');
   bool isAdmin = false;
 
   AppUser(
@@ -45,7 +45,10 @@ class AppUser {
         'userId': userId,
         'email': email,
         'displayName': displayName,
-        'shelter': jsonEncode(shelter),
+        'shelter': {
+          'shelterId': shelter!.shelterId,
+          'shelterName': shelter!.shelterName
+        },
         'isAdmin': isAdmin == true ? 'true' : 'false',
         'favouriteAnimals': jsonEncode(favouriteAnimals),
       };

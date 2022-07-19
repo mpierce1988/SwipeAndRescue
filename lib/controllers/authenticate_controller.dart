@@ -10,6 +10,7 @@ class AuthenticateController extends ChangeNotifier {
   AuthenticateController() {
     _user = authService.user;
     _userStream = authService.userStream;
+    _appUser = authService.appUser;
   }
 
   // Fields
