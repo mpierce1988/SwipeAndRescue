@@ -28,7 +28,9 @@ class AppUser {
               .map((e) => Animal.fromJson(e))
               .toList()
           : const <Animal>[],
-      shelter: Shelter.fromJson(json['shelter']),
+      shelter: json['shelter'] != null && json['shelter'].toString() != ''
+          ? Shelter.fromJson(json['shelter'])
+          : null,
       isAdmin: json['isAdmin'] != null
           ? json['isAdmin'] == true
               ? true
