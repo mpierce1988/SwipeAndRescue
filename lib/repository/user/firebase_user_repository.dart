@@ -21,14 +21,14 @@ class FirebaseUserRepository implements UserRepository {
     _user = FirebaseAuth.instance.currentUser;
     _userStream = FirebaseAuth.instance.authStateChanges();
 
-    // TODO: Create AppUser from Users collection document
-    AppUser appUser = AppUser();
+    // get current user information, if its available, from user collection
+    AppUser? appUser = await getUserRecord(user!.uid);
 
-    // update or create new user record
-    AppUser updatedAppUser = await updateUserRecord(appUser);
+    // if there is no user record, create one
+    appUser ??= await createUserRecord(user!);
 
     // return UserAuthInfo
-    return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
+    return UserAuthInfo(appUser, user: user, userStream: userStream);
     //} on FirebaseException catch (e) {
     //  throw FirebaseException(plugin: e.plugin);
     //  return UserAuthInfo();
@@ -52,18 +52,18 @@ class FirebaseUserRepository implements UserRepository {
       // await sign in to firebase with google credentials
       await FirebaseAuth.instance.signInWithCredential(authCredential);
 
-      // TODO: Create AppUser from Users collection document
-      AppUser appUser = AppUser();
-
-      // update or create new user record
-      AppUser updatedAppUser = await updateUserRecord(appUser);
-
       // set user and stream variables
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
 
+      // get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
+
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
+
       // return UserAuthInfo
-      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
       return UserAuthInfo(AppUser());
@@ -77,13 +77,13 @@ class FirebaseUserRepository implements UserRepository {
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
 
-// TODO: Create AppUser from Users collection document
-      AppUser appUser = AppUser();
+// get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
 
-      // update or create new user record
-      AppUser updatedAppUser = await updateUserRecord(appUser);
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
 
-      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
       return UserAuthInfo(AppUser());
@@ -110,13 +110,13 @@ class FirebaseUserRepository implements UserRepository {
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
 
-      // TODO: Create AppUser from Users collection document
-      AppUser appUser = AppUser();
+      // get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
 
-      // update or create new user record
-      AppUser updatedAppUser = await updateUserRecord(appUser);
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
 
-      return UserAuthInfo(updatedAppUser, user: user, userStream: userStream);
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
         debugPrint('The password provided is too weak.');
@@ -147,16 +147,18 @@ class FirebaseUserRepository implements UserRepository {
           .set(appUser.toJson(), SetOptions(merge: true));
       appUser.userId = ref.id;
     } else {
-      // create document
-      // update appUser from auth service
-      appUser.displayName =
-          FirebaseAuth.instance.currentUser!.displayName ?? '';
-      appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
-      // create new document with auto generated ID
-      final newUser = FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .set(appUser.toJson());
+      // // create document
+      // // update appUser from auth service
+      // appUser.displayName =
+      //     FirebaseAuth.instance.currentUser!.displayName ?? '';
+      // appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+      // // create new document with auto generated ID
+      // final newUser = FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(_user!.uid)
+      //     .set(appUser.toJson());
+
+      createUserRecord(_user!);
     }
 
     return appUser;
@@ -164,4 +166,38 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   AppUser appUser = AppUser();
+
+  /// Gets the AppUser
+  @override
+  Future<AppUser?> getUserRecord(String userId) async {
+    // get reference to the user document
+    var ref =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    // check if document exists, if so, return the AppUser information
+    if (ref.exists) {
+      return (AppUser.fromJson(ref.data() ?? {}));
+    }
+
+    // else, return null
+    return null;
+  }
+
+  @override
+  Future<AppUser> createUserRecord(User user) async {
+    AppUser appUser = AppUser();
+
+    // create document
+    // update appUser from auth service
+    appUser.displayName = FirebaseAuth.instance.currentUser!.displayName ?? '';
+    appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+    appUser.userId = user.uid;
+    // create new document with auto generated ID from auth service
+    final newUser = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set(appUser.toJson());
+
+    return appUser;
+  }
 }

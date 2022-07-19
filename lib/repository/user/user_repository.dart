@@ -36,4 +36,14 @@ abstract class UserRepository {
   Future<void> updateUserRecord(AppUser appUser) async {
     await Future.delayed(const Duration(milliseconds: 200));
   }
+
+  Future<AppUser?> getUserRecord(String userId) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    return null;
+  }
+
+  Future<AppUser> createUserRecord(User user) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    return AppUser();
+  }
 }
