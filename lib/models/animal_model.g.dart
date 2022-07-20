@@ -9,15 +9,9 @@ part of 'animal_model.dart';
 Animal _$AnimalFromJson(Map<String, dynamic> json) => Animal(
       animalID: json['animalID'] as String? ?? '',
       name: json['name'] as String? ?? '',
-      animalType: json['animalType'].toString().toLowerCase() == 'dog'
-          ? AnimalType.dog
-          : json['animalType'].toString().toLowerCase() == 'cat'
-              ? AnimalType.cat
-              : json['animalType'].toString().toLowerCase() == 'rabbit'
-                  ? AnimalType.rabbit
-                  : AnimalType.other,
-      // $enumDecodeNullable(_$AnimalTypeEnumMap, json['animalType']) ??
-      //     AnimalType.other,
+      animalType:
+          $enumDecodeNullable(_$AnimalTypeEnumMap, json['animalType']) ??
+              AnimalType.other,
       imageURL: json['imageURL'] as String? ?? '',
     );
 

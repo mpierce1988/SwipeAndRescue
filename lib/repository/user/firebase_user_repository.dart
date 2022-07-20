@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:swipeandrescue/models/app_user.dart';
+import 'package:swipeandrescue/models/shelter_model.dart';
 import 'package:swipeandrescue/models/user_auth_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swipeandrescue/repository/user/user_repository.dart';
@@ -19,8 +22,14 @@ class FirebaseUserRepository implements UserRepository {
     _user = FirebaseAuth.instance.currentUser;
     _userStream = FirebaseAuth.instance.authStateChanges();
 
+    // get current user information, if its available, from user collection
+    AppUser? appUser = await getUserRecord(user!.uid);
+
+    // if there is no user record, create one
+    appUser ??= await createUserRecord(user!);
+
     // return UserAuthInfo
-    return UserAuthInfo(user: user, userStream: userStream);
+    return UserAuthInfo(appUser, user: user, userStream: userStream);
     //} on FirebaseException catch (e) {
     //  throw FirebaseException(plugin: e.plugin);
     //  return UserAuthInfo();
@@ -33,7 +42,7 @@ class FirebaseUserRepository implements UserRepository {
       final googleUser = await GoogleSignIn().signIn();
 
       // return empty user auth info if auth failed
-      if (googleUser == null) return UserAuthInfo();
+      if (googleUser == null) return UserAuthInfo(AppUser());
 
       // get Google auth information
       final googleAuth = await googleUser.authentication;
@@ -48,11 +57,17 @@ class FirebaseUserRepository implements UserRepository {
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
 
+      // get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
+
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
+
       // return UserAuthInfo
-      return UserAuthInfo(user: user, userStream: userStream);
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
   }
 
@@ -62,10 +77,17 @@ class FirebaseUserRepository implements UserRepository {
       await FirebaseAuth.instance.signInAnonymously();
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
-      return UserAuthInfo(user: user, userStream: userStream);
+
+// get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
+
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
+
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       debugPrint(e.message);
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
   }
 
@@ -88,14 +110,97 @@ class FirebaseUserRepository implements UserRepository {
           .createUserWithEmailAndPassword(email: email, password: password);
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
-      return UserAuthInfo(user: user, userStream: userStream);
+
+      // get current user information, if its available, from user collection
+      AppUser? appUser = await getUserRecord(user!.uid);
+
+      // if there is no user record, create one
+      appUser ??= await createUserRecord(user!);
+
+      return UserAuthInfo(appUser, user: user, userStream: userStream);
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {
         debugPrint('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         debugPrint('An account already exists for that email.');
       }
-      return UserAuthInfo();
+      return UserAuthInfo(AppUser());
     }
+  }
+
+  @override
+  Future<AppUser> updateUserRecord(AppUser appUser) async {
+    // get reference to the user document
+    var ref = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .get();
+
+    if (ref.exists) {
+      // update AppUser from auth service
+      appUser.displayName =
+          FirebaseAuth.instance.currentUser!.displayName ?? '';
+      appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+      // update document
+      var user = FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .set(appUser.toJson(), SetOptions(merge: true));
+      appUser.userId = ref.id;
+    } else {
+      // // create document
+      // // update appUser from auth service
+      // appUser.displayName =
+      //     FirebaseAuth.instance.currentUser!.displayName ?? '';
+      // appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+      // // create new document with auto generated ID
+      // final newUser = FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(_user!.uid)
+      //     .set(appUser.toJson());
+
+      createUserRecord(_user!);
+    }
+
+    return appUser;
+  }
+
+  @override
+  AppUser appUser = AppUser();
+
+  /// Gets the AppUser
+  @override
+  Future<AppUser?> getUserRecord(String userId) async {
+    // get reference to the user document
+    var ref =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    // check if document exists, if so, return the AppUser information
+    if (ref.exists) {
+      return (AppUser.fromJson(ref.data() ?? {}));
+    }
+
+    // else, return null
+    return null;
+  }
+
+  @override
+  Future<AppUser> createUserRecord(User user) async {
+    AppUser appUser = AppUser();
+
+    // create document
+    // update appUser from auth service
+    appUser.displayName = FirebaseAuth.instance.currentUser!.displayName ?? '';
+    appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
+    appUser.userId = user.uid;
+    appUser.favouriteAnimals = [];
+    appUser.shelter = Shelter(shelterId: '', shelterName: '');
+    // create new document with auto generated ID from auth service
+    final newUser = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set(appUser.toJson());
+
+    return appUser;
   }
 }

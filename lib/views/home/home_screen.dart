@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:swipeandrescue/controllers/authenticate_controller.dart';
+import 'package:swipeandrescue/views/home/admin_page.dart';
 import 'package:swipeandrescue/views/home/browse_animals_page.dart';
 import 'package:swipeandrescue/views/home/favourites_page.dart';
 import 'package:swipeandrescue/views/home/profile_page.dart';
@@ -22,34 +25,86 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isShelterAdmin = Provider.of<AuthenticateController>(context)
+            .appUser
+            .shelter!
+            .shelterId !=
+        '';
+
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        children: [
-          BrowseAnimalsPage(),
-          const FavouritesPage(),
-          const ProfilePage(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentPageIndex,
-        onTap: (value) {
-          _currentPageIndex = value.toInt();
-          _pageController.animateToPage(value,
-              duration: _animatePageDuration, curve: _animatePageurve);
-          setState(() {});
-        },
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.house), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
-        ],
-      ),
+      body: isShelterAdmin ? _shelterAdminPageView() : _userPageView(),
+      bottomNavigationBar: isShelterAdmin
+          ? _shelterWorkerBottomNavigationBar()
+          : _userBottomNavigationBar(),
+    );
+  }
+
+  PageView _userPageView() {
+    return PageView(
+      physics: const NeverScrollableScrollPhysics(),
+      controller: _pageController,
+      children: [
+        BrowseAnimalsPage(),
+        const FavouritesPage(),
+        const ProfilePage(),
+      ],
+    );
+  }
+
+  PageView _shelterAdminPageView() {
+    return PageView(
+      physics: const NeverScrollableScrollPhysics(),
+      controller: _pageController,
+      children: [
+        BrowseAnimalsPage(),
+        const FavouritesPage(),
+        const ProfilePage(),
+        const AdminPage(),
+      ],
+    );
+  }
+
+  BottomNavigationBar _userBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _currentPageIndex,
+      onTap: (value) {
+        _currentPageIndex = value.toInt();
+        _pageController.animateToPage(value,
+            duration: _animatePageDuration, curve: _animatePageurve);
+        setState(() {});
+      },
+      items: const [
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.house), label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
+      ],
+    );
+  }
+
+  BottomNavigationBar _shelterWorkerBottomNavigationBar() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _currentPageIndex,
+      onTap: (value) {
+        _currentPageIndex = value.toInt();
+        _pageController.animateToPage(value,
+            duration: _animatePageDuration, curve: _animatePageurve);
+        setState(() {});
+      },
+      items: const [
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.house), label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
+      ],
     );
   }
 }
