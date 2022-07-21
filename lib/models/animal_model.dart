@@ -8,14 +8,45 @@ class Animal {
   String name;
   AnimalType animalType;
   String imageURL;
+  AgeGroup ageGroup;
+  List<String> behaviours;
+  String colour;
+  String secondaryColour;
+  String description;
+  List<String> medical;
+  bool neutered;
+  Sex sex;
 
   Animal(
       {this.animalID = '',
       this.name = '',
       this.animalType = AnimalType.other,
-      this.imageURL = ''});
+      this.imageURL = '',
+      this.ageGroup = const AgeGroup(),
+      this.behaviours = const [],
+      this.colour = '',
+      this.secondaryColour = '',
+      this.description = '',
+      this.medical = const [],
+      this.neutered = false,
+      this.sex = Sex.unknown});
 
   factory Animal.fromJson(Map<String, dynamic> json) => _$AnimalFromJson(json);
 
   Map<String, dynamic> toJson() => _$AnimalToJson(this);
 }
+
+@JsonSerializable()
+class AgeGroup {
+  final int months;
+  final int years;
+
+  const AgeGroup({this.months = 0, this.years = 0});
+
+  factory AgeGroup.fromJson(Map<String, dynamic> json) =>
+      _$AgeGroupFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AgeGroupToJson(this);
+}
+
+enum Sex { male, female, unknown }
