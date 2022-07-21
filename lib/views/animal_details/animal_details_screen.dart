@@ -49,35 +49,71 @@ class AnimalDetailsScreen extends StatelessWidget {
           }
 
           // else show animal details
+          // local variables to make null checking easier
+          String name = animal.data!.name != '' ? animal.data!.name : 'Someone';
+          AnimalType animalType = animal.data!.animalType;
+          List<String> behaviours = animal.data!.behaviours.isNotEmpty
+              ? animal.data!.behaviours
+              : ['Unknown'];
+          List<String> breed =
+              animal.data!.breed.isNotEmpty ? animal.data!.breed : ['Unknown'];
+          String colour =
+              animal.data!.colour != '' ? animal.data!.colour : 'Unknown';
+          String secondaryColour = animal.data!.secondaryColour != ''
+              ? animal.data!.secondaryColour
+              : 'Unknown';
+          String description = animal.data!.description != ''
+              ? animal.data!.description
+              : 'None available';
+          List<String> medical = animal.data!.medical.isNotEmpty
+              ? animal.data!.medical
+              : ['Not Available'];
+          bool neutered = animal.data!.neutered;
+          Sex sex = animal.data!.sex;
+          String imageURL = animal.data!.imageURL;
+          AgeGroup ageGroup = animal.data!.ageGroup;
+
+          List<bool> openPanels = [false, false, false, false, false, false];
+
           return Scaffold(
             appBar: AppBar(
-              title: Text('${animal.data!.name}\'s Profile'),
+              title: Text('$name\'s Profile'),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text('Hello ${animal.data!.name}!'),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: 400,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(animal.data!.imageURL),
-                          fit: BoxFit.cover),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Text('Hello $name!'),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                      'Animal Type: ${_getAnimalTypeAsString(animal.data!.animalType)}'),
-                ],
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      width: 400,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(animal.data!.imageURL),
+                            fit: BoxFit.cover),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                        'Animal Type: ${_getAnimalTypeAsString(animal.data!.animalType)}'),
+                    Text('Colour: $colour'),
+                    Text(
+                        'Age: ${ageGroup.years} years, ${ageGroup.months} months'),
+                    AnimalInfoExpansionList(
+                        description: description,
+                        behaviour: behaviours,
+                        breed: breed,
+                        medical: medical),
+                  ],
+                ),
               ),
             ),
           );
@@ -105,5 +141,84 @@ class AnimalDetailsScreen extends StatelessWidget {
     }
 
     return result;
+  }
+}
+
+class AnimalInfoExpansionList extends StatefulWidget {
+  String description;
+  List<String> behaviour;
+  List<String> breed;
+  List<String> medical;
+
+  AnimalInfoExpansionList(
+      {Key? key,
+      required this.description,
+      required this.behaviour,
+      required this.breed,
+      required this.medical})
+      : super(key: key);
+
+  @override
+  State<AnimalInfoExpansionList> createState() =>
+      _AnimalInfoExpansionListState();
+}
+
+class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
+  final List<bool> _isOpen = [false, false, false, false, false];
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionPanelList(
+      expansionCallback: (panelIndex, isExpanded) {
+        setState(() {
+          _isOpen[panelIndex] = !isExpanded;
+        });
+      },
+      children: [
+        ExpansionPanel(
+          isExpanded: _isOpen[0],
+          headerBuilder: (BuildContext context, bool state) {
+            return const Text('Description');
+          },
+          body: Text(widget.description),
+        ),
+        ExpansionPanel(
+          isExpanded: _isOpen[1],
+          headerBuilder: (BuildContext context, bool state) {
+            return const Text('Behaviours');
+          },
+          body: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.behaviour.length,
+              itemBuilder: ((context, index) {
+                return Text(widget.behaviour[index]);
+              })),
+        ),
+        ExpansionPanel(
+          isExpanded: _isOpen[2],
+          headerBuilder: (BuildContext context, bool state) {
+            return const Text('Breed');
+          },
+          body: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.behaviour.length,
+              itemBuilder: ((context, index) {
+                return Text(widget.breed[index]);
+              })),
+        ),
+        ExpansionPanel(
+          isExpanded: _isOpen[3],
+          headerBuilder: (BuildContext context, bool state) {
+            return const Text('Medical');
+          },
+          body: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.behaviour.length,
+              itemBuilder: ((context, index) {
+                return Text(widget.medical[index]);
+              })),
+        ),
+      ],
+    );
   }
 }

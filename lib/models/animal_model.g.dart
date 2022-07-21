@@ -20,6 +20,9 @@ Animal _$AnimalFromJson(Map<String, dynamic> json) => Animal(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      breed:
+          (json['breed'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
       colour: json['colour'] as String? ?? '',
       secondaryColour: json['secondaryColour'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -38,6 +41,7 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'imageURL': instance.imageURL,
       'ageGroup': instance.ageGroup,
       'behaviours': instance.behaviours,
+      'breed': instance.breed,
       'colour': instance.colour,
       'secondaryColour': instance.secondaryColour,
       'description': instance.description,

@@ -10,6 +10,7 @@ class Animal {
   String imageURL;
   AgeGroup ageGroup;
   List<String> behaviours;
+  List<String> breed;
   String colour;
   String secondaryColour;
   String description;
@@ -24,6 +25,7 @@ class Animal {
       this.imageURL = '',
       this.ageGroup = const AgeGroup(),
       this.behaviours = const [],
+      this.breed = const [],
       this.colour = '',
       this.secondaryColour = '',
       this.description = '',
