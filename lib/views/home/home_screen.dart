@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
+import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/views/home/admin_page.dart';
 import 'package:swipeandrescue/views/home/browse_animals_page.dart';
 import 'package:swipeandrescue/views/home/favourites_page.dart';
@@ -25,11 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isShelterAdmin = Provider.of<AuthenticateController>(context)
-            .appUser
-            .shelter!
-            .shelterId !=
-        '';
+    bool isShelterAdmin = _isShelterAdmin(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
@@ -106,5 +103,20 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
       ],
     );
+  }
+
+  bool _isShelterAdmin(BuildContext context) {
+    // determines if the current user is a shelter worker/admin
+    AppUser appUser = Provider.of<AuthenticateController>(context).appUser;
+
+    if (appUser.shelter == null) {
+      return false;
+    }
+    if (appUser.shelter!.shelterId.isEmpty ||
+        appUser.shelter!.shelterId == '') {
+      return false;
+    }
+
+    return true;
   }
 }
