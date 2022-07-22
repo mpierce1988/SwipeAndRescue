@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final Duration _animatePageDuration = const Duration(milliseconds: 500);
 
-  final Curve _animatePageurve = Curves.easeOutQuad;
+  final Curve _animatePageCurve = Curves.easeOutQuad;
 
   int _currentPageIndex = 0;
 
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: (value) {
         _currentPageIndex = value.toInt();
         _pageController.animateToPage(value,
-            duration: _animatePageDuration, curve: _animatePageurve);
+            duration: _animatePageDuration, curve: _animatePageCurve);
         setState(() {});
       },
       items: const [
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: (value) {
         _currentPageIndex = value.toInt();
         _pageController.animateToPage(value,
-            duration: _animatePageDuration, curve: _animatePageurve);
+            duration: _animatePageDuration, curve: _animatePageCurve);
         setState(() {});
       },
       items: const [
