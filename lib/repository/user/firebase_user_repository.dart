@@ -39,7 +39,11 @@ class FirebaseUserRepository implements UserRepository {
   @override
   Future<UserAuthInfo> authenticateWithGoogle() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      final googleUser = await GoogleSignIn(
+        // client id for web login
+        clientId:
+            '654567059361-9fj4u324p2qnpoi05ivrd6saekqe1sh2.apps.googleusercontent.com',
+      ).signIn();
 
       // return empty user auth info if auth failed
       if (googleUser == null) return UserAuthInfo(AppUser());
