@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:swipeandrescue/constants.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/views/home/admin_page.dart';
@@ -28,16 +29,43 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     bool isShelterAdmin = _isShelterAdmin(context);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: isShelterAdmin ? _shelterAdminPageView() : _userPageView(),
-      bottomNavigationBar: isShelterAdmin
-          ? _shelterWorkerBottomNavigationBar()
-          : _userBottomNavigationBar(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth <= Constants().mediumWidth) {
+          // small layout
+          return Scaffold(
+            appBar: AppBar(title: const Text('Home')),
+            body:
+                isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
+            bottomNavigationBar: isShelterAdmin
+                ? _shelterWorkerBottomNavigationBar()
+                : _userBottomNavigationBar(),
+          );
+        } else if (constraints.maxWidth <= Constants().largeWidth) {
+          // medium layout
+          return Scaffold(
+            appBar: AppBar(title: const Text('Home')),
+            body:
+                isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
+            bottomNavigationBar: isShelterAdmin
+                ? _shelterWorkerBottomNavigationBar()
+                : _userBottomNavigationBar(),
+          );
+        }
+        // large layout
+        debugPrint('Using large layout...');
+        return Scaffold(
+          appBar: AppBar(title: const Text('Home')),
+          body: isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
+          bottomNavigationBar: isShelterAdmin
+              ? _shelterWorkerBottomNavigationBar()
+              : _userBottomNavigationBar(),
+        );
+      },
     );
   }
 
-  PageView _userPageView() {
+  PageView _userPageViewSm() {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
@@ -49,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  PageView _shelterAdminPageView() {
+  PageView _shelterAdminPageViewSm() {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
