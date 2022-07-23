@@ -42,7 +42,11 @@ class BrowseAnimalsPage extends StatelessWidget {
       child: ListView.builder(
         itemCount: animals.length,
         itemBuilder: ((context, index) {
-          return BrowseAnimalsCard(animal: animals[index]);
+          return BrowseAnimalsCard(
+            animal: animals[index],
+            width: 400,
+            height: 400,
+          );
         }),
       ),
     );
@@ -51,11 +55,11 @@ class BrowseAnimalsPage extends StatelessWidget {
   Widget _browseAnimalsGrid(List<Animal> animals) {
     debugPrint('Using animals grid view...');
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(30),
       child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 3 / 2,
+            maxCrossAxisExtent: 400,
+            childAspectRatio: 1,
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
           ),
@@ -63,6 +67,8 @@ class BrowseAnimalsPage extends StatelessWidget {
           itemBuilder: (BuildContext context, int idx) {
             return BrowseAnimalsCard(
               animal: animals[idx],
+              width: 800,
+              height: 800,
             );
           }),
     );
