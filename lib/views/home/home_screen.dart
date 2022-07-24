@@ -56,10 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
         debugPrint('Using large layout...');
         return Scaffold(
           appBar: AppBar(title: const Text('Home')),
-          body: isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
-          bottomNavigationBar: isShelterAdmin
-              ? _shelterWorkerBottomNavigationBar()
-              : _userBottomNavigationBar(),
+          body: Row(
+            children: [
+              isShelterAdmin ? _shelterAdminSideRail() : _userSideRail(),
+              isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewLg(),
+            ],
+          ),
+          // bottomNavigationBar: isShelterAdmin
+          //     ? _shelterWorkerBottomNavigationBar()
+          //     : _userBottomNavigationBar(),
         );
       },
     );
@@ -74,6 +79,20 @@ class _HomeScreenState extends State<HomeScreen> {
         const FavouritesPage(),
         const ProfilePage(),
       ],
+    );
+  }
+
+  Widget _userPageViewLg() {
+    return Expanded(
+      child: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        children: [
+          BrowseAnimalsPage(),
+          const FavouritesPage(),
+          const ProfilePage(),
+        ],
+      ),
     );
   }
 
@@ -130,6 +149,64 @@ class _HomeScreenState extends State<HomeScreen> {
         BottomNavigationBarItem(
             icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
       ],
+    );
+  }
+
+  NavigationRail _userSideRail() {
+    return NavigationRail(
+      selectedIndex: _currentPageIndex,
+      onDestinationSelected: (int index) {
+        setState(
+          () {
+            _currentPageIndex = index;
+            _pageController.animateToPage(index,
+                duration: _animatePageDuration, curve: _animatePageCurve);
+          },
+        );
+      },
+      destinations: <NavigationRailDestination>[
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.house), 'Home', context),
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.heart), 'Favourites', context),
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.user), 'Profile', context),
+      ],
+    );
+  }
+
+  NavigationRail _shelterAdminSideRail() {
+    return NavigationRail(
+      selectedIndex: _currentPageIndex,
+      onDestinationSelected: (int index) {
+        setState(
+          () {
+            _currentPageIndex = index;
+          },
+        );
+      },
+      destinations: <NavigationRailDestination>[
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.house), 'Home', context),
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.heart), 'Favourites', context),
+        _getNavigationRailDestination(
+            const Icon(FontAwesomeIcons.user), 'Profile', context),
+        _getNavigationRailDestination(
+            const Icon(Icons.admin_panel_settings), 'Admin', context),
+      ],
+    );
+  }
+
+  NavigationRailDestination _getNavigationRailDestination(
+      Icon icon, String label, BuildContext context) {
+    return NavigationRailDestination(
+      icon: icon,
+      selectedIcon: Icon(
+        icon.icon,
+        color: Theme.of(context).primaryColor,
+      ),
+      label: Text(label),
     );
   }
 
