@@ -8,6 +8,7 @@ import 'package:swipeandrescue/views/home/admin_page.dart';
 import 'package:swipeandrescue/views/home/browse_animals_page.dart';
 import 'package:swipeandrescue/views/home/favourites_page.dart';
 import 'package:swipeandrescue/views/home/profile_page.dart';
+import 'package:swipeandrescue/widgets/bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -38,8 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
             body:
                 isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
             bottomNavigationBar: isShelterAdmin
-                ? _shelterWorkerBottomNavigationBar()
-                : _userBottomNavigationBar(),
+                ? ShelterWorkerBottomNavigationBar(
+                    currentPageindex: _currentPageIndex,
+                    pageController: _pageController,
+                    animatePageDuration: _animatePageDuration,
+                    animatePageCurve: _animatePageCurve,
+                  )
+                : UserBottomNavigationBar(
+                    currentPageindex: _currentPageIndex,
+                    pageController: _pageController,
+                    animatePageDuration: _animatePageDuration,
+                    animagePageCurve: _animatePageCurve),
           );
         } else if (constraints.maxWidth <= Constants().largeWidth) {
           // medium layout
@@ -48,8 +58,16 @@ class _HomeScreenState extends State<HomeScreen> {
             body:
                 isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
             bottomNavigationBar: isShelterAdmin
-                ? _shelterWorkerBottomNavigationBar()
-                : _userBottomNavigationBar(),
+                ? ShelterWorkerBottomNavigationBar(
+                    currentPageindex: _currentPageIndex,
+                    pageController: _pageController,
+                    animatePageDuration: _animatePageDuration,
+                    animatePageCurve: _animatePageCurve)
+                : UserBottomNavigationBar(
+                    currentPageindex: _currentPageIndex,
+                    pageController: _pageController,
+                    animatePageDuration: _animatePageDuration,
+                    animagePageCurve: _animatePageCurve),
           );
         }
         // large layout
@@ -59,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Row(
             children: [
               isShelterAdmin ? _shelterAdminSideRail() : _userSideRail(),
-              isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewLg(),
+              isShelterAdmin ? _shelterAdminPageViewLg() : _userPageViewLg(),
             ],
           ),
           // bottomNavigationBar: isShelterAdmin
@@ -109,48 +127,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  BottomNavigationBar _userBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: _currentPageIndex,
-      onTap: (value) {
-        _currentPageIndex = value.toInt();
-        _pageController.animateToPage(value,
-            duration: _animatePageDuration, curve: _animatePageCurve);
-        setState(() {});
-      },
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
-      ],
+  Widget _shelterAdminPageViewLg() {
+    return Expanded(
+      child: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        children: [
+          BrowseAnimalsPage(),
+          const FavouritesPage(),
+          const ProfilePage(),
+          const AdminPage(),
+        ],
+      ),
     );
   }
 
-  BottomNavigationBar _shelterWorkerBottomNavigationBar() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _currentPageIndex,
-      onTap: (value) {
-        _currentPageIndex = value.toInt();
-        _pageController.animateToPage(value,
-            duration: _animatePageDuration, curve: _animatePageCurve);
-        setState(() {});
-      },
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
-      ],
-    );
-  }
+  // BottomNavigationBar _shelterWorkerBottomNavigationBar() {
+  //   return BottomNavigationBar(
+  //     type: BottomNavigationBarType.fixed,
+  //     currentIndex: _currentPageIndex,
+  //     onTap: (value) {
+  //       _currentPageIndex = value.toInt();
+  //       _pageController.animateToPage(value,
+  //           duration: _animatePageDuration, curve: _animatePageCurve);
+  //       setState(() {});
+  //     },
+  //     items: const [
+  //       BottomNavigationBarItem(
+  //           icon: Icon(FontAwesomeIcons.house), label: 'Home'),
+  //       BottomNavigationBarItem(
+  //           icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
+  //       BottomNavigationBarItem(
+  //           icon: Icon(FontAwesomeIcons.user), label: 'Profile'),
+  //       BottomNavigationBarItem(
+  //           icon: Icon(Icons.admin_panel_settings), label: 'Admin'),
+  //     ],
+  //   );
+  // }
 
   NavigationRail _userSideRail() {
     return NavigationRail(
@@ -181,6 +194,8 @@ class _HomeScreenState extends State<HomeScreen> {
       onDestinationSelected: (int index) {
         setState(
           () {
+            _pageController.animateToPage(index,
+                duration: _animatePageDuration, curve: _animatePageCurve);
             _currentPageIndex = index;
           },
         );
