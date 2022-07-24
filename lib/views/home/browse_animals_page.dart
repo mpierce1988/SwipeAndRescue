@@ -45,7 +45,7 @@ class BrowseAnimalsPage extends StatelessWidget {
           return BrowseAnimalsCard(
             animal: animals[index],
             width: 400,
-            height: 400,
+            height: 600,
           );
         }),
       ),
