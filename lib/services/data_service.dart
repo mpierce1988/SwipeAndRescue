@@ -28,4 +28,9 @@ class DataService {
   Future<Animal> getAnimal(String animalId) async {
     return await _dataRepository.getAnimal(animalId);
   }
+
+  // get the first image of an animal, if available. otherwise returns empty string
+  Future<String> getFirstAnimalImage(String animalId) async {
+    return await _dataRepository.getImageUrl(animalId);
+  }
 }
