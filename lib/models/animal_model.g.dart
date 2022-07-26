@@ -32,6 +32,10 @@ Animal _$AnimalFromJson(Map<String, dynamic> json) => Animal(
           const [],
       neutered: json['neutered'] as bool? ?? false,
       sex: $enumDecodeNullable(_$SexEnumMap, json['sex']) ?? Sex.unknown,
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
     );
 
 Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
@@ -39,6 +43,7 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'name': instance.name,
       'animalType': _$AnimalTypeEnumMap[instance.animalType]!,
       'imageURL': instance.imageURL,
+      'images': instance.images,
       'ageGroup': instance.ageGroup,
       'behaviours': instance.behaviours,
       'breed': instance.breed,

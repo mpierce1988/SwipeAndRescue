@@ -8,6 +8,7 @@ class Animal {
   String name;
   AnimalType animalType;
   String imageURL;
+  List<String> images;
   AgeGroup ageGroup;
   List<String> behaviours;
   List<String> breed;
@@ -31,7 +32,8 @@ class Animal {
       this.description = '',
       this.medical = const [],
       this.neutered = false,
-      this.sex = Sex.unknown});
+      this.sex = Sex.unknown,
+      this.images = const <String>[]});
 
   factory Animal.fromJson(Map<String, dynamic> json) => _$AnimalFromJson(json);
 

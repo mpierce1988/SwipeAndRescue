@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/models/success_state.dart';
 
 abstract class DataRepository {
   Future<List<Animal>> getAnimals() async {
@@ -17,5 +20,13 @@ abstract class DataRepository {
     await Future.delayed(const Duration(milliseconds: 200));
 
     return '';
+  }
+
+  Future<SuccessState> addAnimal(Animal animal, List<File> photos) async {
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
+
+    return SuccessState.failed;
   }
 }
