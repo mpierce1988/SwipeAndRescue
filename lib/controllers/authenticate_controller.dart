@@ -181,7 +181,13 @@ class AuthenticateController extends ChangeNotifier {
   }
 
   _displayErrorAsDialog(dynamic error) {
+    if (error.runtimeType != FirebaseException) {
+      debugPrint(error.toString());
+      return;
+    }
+
     FirebaseException e = error as FirebaseException;
+
     debugPrint('${e.message}!');
     showDialog(
       context: _currentContext,

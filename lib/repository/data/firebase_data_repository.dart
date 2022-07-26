@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/repository/data/data_repository.dart';
 
@@ -34,5 +36,27 @@ class FirebaseDataRepository implements DataRepository {
     var snapshot = await ref.get();
 
     return Animal.fromJson(snapshot.data() ?? {});
+  }
+
+  @override
+  Future<String> getImageUrl(String animalId) async {
+    final storage = FirebaseStorage.instance;
+    final storageReference = storage.ref().child('images/$animalId/');
+
+    dynamic listResult;
+    try {
+      listResult = await storageReference.listAll();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    // return empty string if no images
+    if (listResult == null || listResult.items.isEmpty) {
+      return '';
+    }
+
+    // else, return the first image
+    debugPrint(await listResult.items[0].getDownloadURL());
+    return listResult.items[0].getDownloadURL();
   }
 }

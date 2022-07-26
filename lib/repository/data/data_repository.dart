@@ -12,4 +12,10 @@ abstract class DataRepository {
 
     return Animal();
   }
+
+  Future<String> getImageUrl(String animalId) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    return '';
+  }
 }
