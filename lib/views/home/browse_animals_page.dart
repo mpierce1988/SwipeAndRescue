@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/constants.dart';
+
 import 'package:swipeandrescue/controllers/browse_animals_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/widgets/browse_animals_card.dart';
 
 class BrowseAnimalsPage extends StatelessWidget {
-  BrowseAnimalsPage({Key? key}) : super(key: key);
-
-  final BrowseAnimalsController browseAnimalsController =
-      BrowseAnimalsController();
+  const BrowseAnimalsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final BrowseAnimalsController browseAnimalsController =
+        BrowseAnimalsController();
     return FutureBuilder(
         future: browseAnimalsController.getAnimals(),
         builder: (context, AsyncSnapshot<List<Animal>> snapshot) {
+          debugPrint("Building Browse Animals page...");
           if (snapshot.connectionState == ConnectionState.waiting) {
             // show circular loading
             return const Center(child: CircularProgressIndicator.adaptive());

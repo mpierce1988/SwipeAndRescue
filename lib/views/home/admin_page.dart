@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
+import 'package:swipeandrescue/views/add_animals/add_animals_screen.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class AdminPage extends StatelessWidget {
@@ -14,8 +15,19 @@ class AdminPage extends StatelessWidget {
 
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Text('Profile'),
+          const Text('Admin'),
+          LoginButton(
+            color: Colors.blue,
+            icon: FontAwesomeIcons.plus,
+            text: 'Add Animal',
+            loginMethod: (context) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddAnimalsScreen(),
+              ));
+            },
+          ),
           LoginButton(
             color: Colors.green,
             icon: FontAwesomeIcons.doorOpen,

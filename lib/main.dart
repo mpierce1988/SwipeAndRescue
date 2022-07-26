@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => StreamBuilder(
         stream: authenticateController.userStream,
         builder: (context, snapshot) {
+          debugPrint('User stream triggered a re-build...');
           if (snapshot.connectionState == ConnectionState.waiting) {
             // waiting for response
             return const Scaffold(
