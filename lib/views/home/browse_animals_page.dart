@@ -5,11 +5,18 @@ import 'package:swipeandrescue/controllers/browse_animals_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/widgets/browse_animals_card.dart';
 
-class BrowseAnimalsPage extends StatelessWidget {
+class BrowseAnimalsPage extends StatefulWidget {
   const BrowseAnimalsPage({Key? key}) : super(key: key);
 
   @override
+  State<BrowseAnimalsPage> createState() => _BrowseAnimalsPageState();
+}
+
+class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final BrowseAnimalsController browseAnimalsController =
         BrowseAnimalsController();
     return FutureBuilder(
@@ -91,4 +98,7 @@ class BrowseAnimalsPage extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
