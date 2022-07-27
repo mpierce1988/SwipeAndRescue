@@ -21,30 +21,33 @@ class AddAnimalsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          body: Padding(
-              padding: const EdgeInsets.all(30),
-              child: Form(
-                autovalidateMode: AutovalidateMode.disabled,
-                key: formKey,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text('Animal Type:'),
-                      const SizedBox(height: 20),
-                      _animalTypeDropdown(context),
-                      const SizedBox(height: 20),
-                      const Text('Name:'),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: Provider.of<AddAnimalsController>(context,
-                                listen: false)
-                            .nameTextEditingController,
-                        validator: (value) =>
-                            Provider.of<AddAnimalsController>(context)
-                                .validateName(),
-                      ),
-                    ]),
-              )),
+          body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Form(
+                  autovalidateMode: AutovalidateMode.disabled,
+                  key: formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('Name:'),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: Provider.of<AddAnimalsController>(context,
+                                  listen: false)
+                              .nameTextEditingController,
+                          validator: (value) =>
+                              Provider.of<AddAnimalsController>(context)
+                                  .validateName(),
+                        ),
+                        const SizedBox(height: 30),
+                        const Text('Animal Type:'),
+                        const SizedBox(height: 20),
+                        _animalTypeDropdown(context),
+                        const SizedBox(height: 20),
+                      ]),
+                )),
+          ),
         );
       },
     );

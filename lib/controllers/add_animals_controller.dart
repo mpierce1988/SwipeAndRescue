@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
 
 class AddAnimalsController extends ChangeNotifier {
@@ -13,6 +14,62 @@ class AddAnimalsController extends ChangeNotifier {
         return 2;
       default:
         return 3;
+    }
+  }
+
+  set animalTypeID(int id) {
+    switch (id) {
+      case 0:
+        animalType = AnimalType.cat;
+        notifyListeners();
+        break;
+      case 1:
+        animalType = AnimalType.dog;
+        notifyListeners();
+        break;
+      case 2:
+        animalType = AnimalType.rabbit;
+        notifyListeners();
+        break;
+      default:
+        animalType = AnimalType.other;
+        notifyListeners();
+        break;
+    }
+  }
+
+  Sex sex = Sex.unknown;
+  int get sexID {
+    switch (sex) {
+      case Sex.female:
+        return 0;
+      case Sex.male:
+        return 1;
+      case Sex.unknown:
+        return 2;
+      default:
+        return 2;
+    }
+  }
+
+  set sexID(int id) {
+    switch (id) {
+      case 0:
+        sex = Sex.female;
+        notifyListeners();
+        break;
+      case 1:
+        sex = Sex.male;
+        notifyListeners();
+        break;
+      case 2:
+        sex = Sex.unknown;
+        notifyListeners();
+        break;
+      default:
+        sex = Sex.unknown;
+        notifyListeners();
+        break;
     }
   }
 
