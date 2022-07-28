@@ -126,10 +126,38 @@ class AddAnimalsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _behaviours = [];
-  List<String> get behaviours => _behaviours;
-  set behaviours(List<String> behaviours) {
+  List<TextEditingController> _behaviours = [];
+  List<TextEditingController> get behaviours => _behaviours;
+  set behaviours(List<TextEditingController> behaviours) {
     _behaviours = behaviours;
+    notifyListeners();
+  }
+
+  List<TextEditingController> _breeds = [];
+  List<TextEditingController> get breeds => _breeds;
+  set breeds(List<TextEditingController> breeds) {
+    _breeds = breeds;
+    notifyListeners();
+  }
+
+  List<TextEditingController> _medical = [];
+  List<TextEditingController> get medical => _medical;
+  set medical(List<TextEditingController> medical) {
+    _medical = medical;
+    notifyListeners();
+  }
+
+  bool _isNeuteured = false;
+  bool get isNeuteured => _isNeuteured;
+  set isNeuteured(bool value) {
+    _isNeuteured = value;
+    notifyListeners();
+  }
+
+  TextEditingController _description = TextEditingController();
+  TextEditingController get description => _description;
+  set description(TextEditingController controller) {
+    _description = controller;
     notifyListeners();
   }
 

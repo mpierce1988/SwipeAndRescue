@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/add_animals_controller.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
@@ -22,71 +23,104 @@ class AddAnimalsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.disabled,
-                  key: formKey,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // Name field
-                        const Text('Name:'),
-                        TextFormField(
-                          controller: Provider.of<AddAnimalsController>(context,
-                                  listen: false)
-                              .nameTextEditingController,
-                          validator: (value) =>
-                              Provider.of<AddAnimalsController>(context)
-                                  .validateName(),
-                        ),
-                        const SizedBox(height: 30),
-                        // Animal type field
-                        const Text('Animal Type:'),
+          body: GestureDetector(
+            onTap: (() {
+              FocusScopeNode currentFocus = FocusScope.of(context);
 
-                        _animalTypeDropdown(context),
-                        const SizedBox(height: 30),
-                        // Sex field
-                        const Text("Sex:"),
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            }),
+            child: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.disabled,
+                    key: formKey,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // Name field
+                          const Text('Name:'),
+                          TextFormField(
+                            controller: Provider.of<AddAnimalsController>(
+                                    context,
+                                    listen: false)
+                                .nameTextEditingController,
+                            validator: (value) =>
+                                Provider.of<AddAnimalsController>(context)
+                                    .validateName(),
+                          ),
+                          const SizedBox(height: 30),
+                          // Animal type field
+                          const Text('Animal Type:'),
 
-                        _sexDropdownBox(context),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        // Age field
-                        const Text("Age:"),
+                          _animalTypeDropdown(context),
+                          const SizedBox(height: 30),
+                          // Sex field
+                          const Text("Sex:"),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Years
-                            Flexible(
-                              flex: 1,
-                              child: _ageYearsDropdown(context),
-                            ),
-                            const Flexible(flex: 1, child: Text('years, ')),
-                            // Months
-                            Flexible(
-                              flex: 1,
-                              child: _ageMonthsDropdown(context),
-                            ),
-                            const Text('months.'),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        const Text('Colour:'),
-                        _colourDropdown(context),
-                        const SizedBox(height: 30),
-                        const Text('Secondary Colour:'),
-                        _secondaryColourDropdown(context),
-                        const SizedBox(height: 30),
-                        const Text('Behaviours:'),
-                        TextEntryList(
+                          _sexDropdownBox(context),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          // Age field
+                          const Text("Age:"),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // Years
+                              Flexible(
+                                flex: 1,
+                                child: _ageYearsDropdown(context),
+                              ),
+                              const Flexible(flex: 1, child: Text('years, ')),
+                              // Months
+                              Flexible(
+                                flex: 1,
+                                child: _ageMonthsDropdown(context),
+                              ),
+                              const Text('months.'),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          const Text('Colour:'),
+                          _colourDropdown(context),
+                          const SizedBox(height: 30),
+                          const Text('Secondary Colour:'),
+                          _secondaryColourDropdown(context),
+                          const SizedBox(height: 30),
+                          const Text('Behaviours:'),
+                          TextEntryList(
+                              entries:
+                                  Provider.of<AddAnimalsController>(context)
+                                      .behaviours),
+                          const SizedBox(height: 30),
+                          const Text('Breeds:'),
+                          TextEntryList(
                             entries: Provider.of<AddAnimalsController>(context)
-                                .behaviours),
-                      ]),
-                )),
+                                .breeds,
+                          ),
+                          const SizedBox(height: 30),
+                          const Text('Medical:'),
+                          TextEntryList(
+                            entries: Provider.of<AddAnimalsController>(context)
+                                .medical,
+                          ),
+                          const SizedBox(height: 30),
+                          const Text('Description:'),
+                          TextFormField(
+                            maxLines: null,
+                            minLines: 5,
+                            //keyboardType: TextInputType.multiline,
+                            controller:
+                                Provider.of<AddAnimalsController>(context)
+                                    .description,
+                          ),
+                        ]),
+                  )),
+            ),
           ),
         );
       },
@@ -271,9 +305,9 @@ class AddAnimalsScreen extends StatelessWidget {
 }
 
 class TextEntryList extends StatefulWidget {
-  List<String> entries;
+  final List<TextEditingController> entries;
 
-  TextEntryList({Key? key, this.entries = const []}) : super(key: key);
+  const TextEntryList({Key? key, this.entries = const []}) : super(key: key);
 
   @override
   State<TextEntryList> createState() => _TextEntryListState();
@@ -281,25 +315,45 @@ class TextEntryList extends StatefulWidget {
 
 class _TextEntryListState extends State<TextEntryList> {
   int count = 0;
-  List<TextEditingController> textEditingControllers = [];
+  //List<TextEditingController> textEditingControllers = [];
   @override
   Widget build(BuildContext context) {
     for (int i = 0; i < count; i++) {
-      if (i >= textEditingControllers.length) {
+      if (i >= widget.entries.length) {
         // list does not already have a text editing controller for this
         // index
-        textEditingControllers.add(TextEditingController());
+        widget.entries.add(TextEditingController());
       }
     }
     return Column(
       children: [
         for (int i = 0; i < count; i++) _newTextBox(i),
-        ElevatedButton.icon(
-          onPressed: () => setState(() {
-            count++;
-          }),
-          icon: const Icon(Icons.plus_one),
-          label: const Text('Add Field'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () => setState(() {
+                // only allow up to 6 fields
+                if (widget.entries.length >= 6) return;
+
+                count++;
+              }),
+              icon: const Icon(Icons.plus_one),
+              label: const Text('Add Field'),
+            ),
+            ElevatedButton.icon(
+              onPressed: (() => setState(() {
+                    // do nothing if entries is already empty
+                    if (widget.entries.isEmpty) return;
+                    // get rid of last text editing controller
+                    widget.entries.removeLast();
+                    // decrement the count
+                    count--;
+                  })),
+              icon: const Icon(FontAwesomeIcons.minus),
+              label: const Text('Remove Field'),
+            ),
+          ],
         ),
       ],
     );
@@ -313,7 +367,7 @@ class _TextEntryListState extends State<TextEntryList> {
           flex: 3,
           child: TextFormField(
             //expands: true,
-            controller: textEditingControllers[index],
+            controller: widget.entries[index],
           ),
         )
       ],

@@ -21,6 +21,8 @@ class BrowseAnimalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //final ImageProvider imageProvider = Image.network(DataService().getFirstAnimalImage(animal.animalID), );
 
+    debugPrint('Browse Animal Card is (re)building...');
+
     return SizedBox(
       width: width.toDouble(),
       height: height.toDouble(),

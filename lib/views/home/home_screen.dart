@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     AppUser appUser = Provider.of<AuthenticateController>(context).appUser;
     bool isShelterAdmin = _isShelterAdmin(appUser);
 
+    debugPrint('Home screen is (re)building...');
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth <= Constants().mediumWidth) {
