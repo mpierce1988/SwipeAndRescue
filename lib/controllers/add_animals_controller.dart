@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
+import 'package:swipeandrescue/models/colours_enum.dart';
 
 class AddAnimalsController extends ChangeNotifier {
   AnimalType animalType = AnimalType.other;
@@ -73,28 +74,59 @@ class AddAnimalsController extends ChangeNotifier {
     }
   }
 
-  TextEditingController nameTextEditingController = TextEditingController();
-
-  setAnimalType(int index) {
-    switch (index) {
-      case 0:
-        animalType = AnimalType.cat;
-        notifyListeners();
-        break;
-      case 1:
-        animalType = AnimalType.dog;
-        notifyListeners();
-        break;
-      case 2:
-        animalType = AnimalType.rabbit;
-        notifyListeners();
-        break;
-      default:
-        animalType = AnimalType.other;
-        notifyListeners();
-        break;
+  int _ageYears = 0;
+  int get ageYears => _ageYears;
+  set ageYears(int years) {
+    if (years < 0) {
+      years = 0;
+    } else if (years > 20) {
+      years = 20;
     }
+
+    _ageYears = years;
+    notifyListeners();
   }
+
+  int _ageMonths = 1;
+  int get ageMonths => _ageMonths;
+  set ageMonths(int months) {
+    if (months < 1) {
+      months = 1;
+    } else if (months > 12) {
+      months = 12;
+    }
+
+    _ageMonths = months;
+    notifyListeners();
+  }
+
+  Colour _colour = Colour.white;
+  int get colour => _colour.index;
+  set colour(int id) {
+    if (id < 0 || id > Colour.values.length - 1) {
+      _colour = Colour.white;
+      notifyListeners();
+      return;
+    }
+
+    _colour = Colour.values[id];
+    notifyListeners();
+  }
+
+  Colour _secondaryColour = Colour.white;
+  int get secondaryColour => _secondaryColour.index;
+  set secondaryColour(int id) {
+    if (id < 0 || id > Colour.values.length - 1) {
+      _secondaryColour = Colour.white;
+      notifyListeners();
+      return;
+    }
+
+    _secondaryColour = Colour.values[id];
+    notifyListeners();
+  }
+
+  TextEditingController nameTextEditingController = TextEditingController();
 
   String? validateName() {
     if (nameTextEditingController.text.isEmpty) {

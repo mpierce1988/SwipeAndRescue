@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/add_animals_controller.dart';
+import 'package:swipeandrescue/models/colours_enum.dart';
 
 class AddAnimalsScreen extends StatelessWidget {
   final AddAnimalsController addAnimalsController = AddAnimalsController();
@@ -30,8 +31,8 @@ class AddAnimalsScreen extends StatelessWidget {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        // Name field
                         const Text('Name:'),
-                        const SizedBox(height: 20),
                         TextFormField(
                           controller: Provider.of<AddAnimalsController>(context,
                                   listen: false)
@@ -41,16 +42,141 @@ class AddAnimalsScreen extends StatelessWidget {
                                   .validateName(),
                         ),
                         const SizedBox(height: 30),
+                        // Animal type field
                         const Text('Animal Type:'),
-                        const SizedBox(height: 20),
+
                         _animalTypeDropdown(context),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
+                        // Sex field
+                        const Text("Sex:"),
+
+                        _sexDropdownBox(context),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        // Age field
+                        const Text("Age:"),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // Years
+                            Flexible(
+                              flex: 1,
+                              child: _ageYearsDropdown(context),
+                            ),
+                            const Flexible(flex: 1, child: Text('years, ')),
+                            // Months
+                            Flexible(
+                              flex: 1,
+                              child: _ageMonthsDropdown(context),
+                            ),
+                            const Text('months.'),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                        const Text('Colour:'),
+                        _colourDropdown(context),
+                        const SizedBox(height: 30),
+                        const Text('Secondary Colour:'),
+                        _secondaryColourDropdown(context),
                       ]),
                 )),
           ),
         );
       },
     );
+  }
+
+  DecoratedBox _secondaryColourDropdown(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).secondaryColour,
+        [
+          for (Colour value in Colour.values)
+            DropdownMenuItem(
+              value: value.index,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: value.color, shape: BoxShape.circle),
+                    ),
+                    Text(_capitalize(value.toString().split('.').last)),
+                  ],
+                ),
+              ),
+            )
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .secondaryColour = value!);
+  }
+
+  DecoratedBox _colourDropdown(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).colour,
+        [
+          for (Colour value in Colour.values)
+            DropdownMenuItem(
+              value: value.index,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: value.color, shape: BoxShape.circle),
+                    ),
+                    Text(_capitalize(value.toString().split('.').last)),
+                  ],
+                ),
+              ),
+            )
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .colour = value!);
+  }
+
+  DecoratedBox _ageYearsDropdown(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).ageYears,
+        [
+          for (int i = 0; i <= 20; i++)
+            DropdownMenuItem(
+              value: i,
+              child: Center(
+                child: Text(i.toString()),
+              ),
+            )
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .ageYears = value!);
+  }
+
+  DecoratedBox _ageMonthsDropdown(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).ageMonths,
+        [
+          for (int i = 1; i <= 12; i++)
+            DropdownMenuItem(
+                value: i,
+                child: Center(
+                  child: Text(i.toString()),
+                ))
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .ageMonths = value!);
   }
 
   DecoratedBox _animalTypeDropdown(BuildContext context) {
@@ -80,6 +206,32 @@ class AddAnimalsScreen extends StatelessWidget {
             .animalTypeID = value as int);
   }
 
+  DecoratedBox _sexDropdownBox(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).sexID,
+        [
+          const DropdownMenuItem(
+            value: 0,
+            child: Center(
+              child: Text('Female'),
+            ),
+          ),
+          const DropdownMenuItem(
+            value: 1,
+            child: Center(
+              child: Text('Male'),
+            ),
+          ),
+          const DropdownMenuItem(
+            value: 2,
+            child: Center(child: Text('Unknown')),
+          ),
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .sexID = value as int);
+  }
+
   DecoratedBox _dropdown(
       BuildContext context,
       int? valueToWatch,
@@ -102,5 +254,13 @@ class AddAnimalsScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String _capitalize(String string) {
+    if (string.isEmpty) {
+      return string;
+    }
+
+    return string[0].toUpperCase() + string.substring(1).toLowerCase();
   }
 }
