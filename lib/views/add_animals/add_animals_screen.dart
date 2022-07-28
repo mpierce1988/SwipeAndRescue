@@ -80,6 +80,11 @@ class AddAnimalsScreen extends StatelessWidget {
                         const SizedBox(height: 30),
                         const Text('Secondary Colour:'),
                         _secondaryColourDropdown(context),
+                        const SizedBox(height: 30),
+                        const Text('Behaviours:'),
+                        TextEntryList(
+                            entries: Provider.of<AddAnimalsController>(context)
+                                .behaviours),
                       ]),
                 )),
           ),
@@ -262,5 +267,56 @@ class AddAnimalsScreen extends StatelessWidget {
     }
 
     return string[0].toUpperCase() + string.substring(1).toLowerCase();
+  }
+}
+
+class TextEntryList extends StatefulWidget {
+  List<String> entries;
+
+  TextEntryList({Key? key, this.entries = const []}) : super(key: key);
+
+  @override
+  State<TextEntryList> createState() => _TextEntryListState();
+}
+
+class _TextEntryListState extends State<TextEntryList> {
+  int count = 0;
+  List<TextEditingController> textEditingControllers = [];
+  @override
+  Widget build(BuildContext context) {
+    for (int i = 0; i < count; i++) {
+      if (i >= textEditingControllers.length) {
+        // list does not already have a text editing controller for this
+        // index
+        textEditingControllers.add(TextEditingController());
+      }
+    }
+    return Column(
+      children: [
+        for (int i = 0; i < count; i++) _newTextBox(i),
+        ElevatedButton.icon(
+          onPressed: () => setState(() {
+            count++;
+          }),
+          icon: const Icon(Icons.plus_one),
+          label: const Text('Add Field'),
+        ),
+      ],
+    );
+  }
+
+  _newTextBox(int index) {
+    return Row(
+      children: [
+        const Flexible(flex: 1, child: Icon(Icons.arrow_right)),
+        Flexible(
+          flex: 3,
+          child: TextFormField(
+            //expands: true,
+            controller: textEditingControllers[index],
+          ),
+        )
+      ],
+    );
   }
 }

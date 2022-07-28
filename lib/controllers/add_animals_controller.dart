@@ -126,6 +126,13 @@ class AddAnimalsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> _behaviours = [];
+  List<String> get behaviours => _behaviours;
+  set behaviours(List<String> behaviours) {
+    _behaviours = behaviours;
+    notifyListeners();
+  }
+
   TextEditingController nameTextEditingController = TextEditingController();
 
   String? validateName() {
