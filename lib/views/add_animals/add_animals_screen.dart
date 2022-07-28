@@ -54,24 +54,52 @@ class AddAnimalsScreen extends StatelessWidget {
   }
 
   DecoratedBox _animalTypeDropdown(BuildContext context) {
+    return _dropdown(
+        context,
+        Provider.of<AddAnimalsController>(context).animalTypeID,
+        [
+          const DropdownMenuItem(
+            value: 0,
+            child: Center(child: Text('Cat')),
+          ),
+          const DropdownMenuItem(
+            value: 1,
+            child: Center(child: Text('Dog')),
+          ),
+          const DropdownMenuItem(
+            value: 2,
+            child: Center(child: Text('Rabbit')),
+          ),
+          const DropdownMenuItem(
+              value: 3,
+              child: Center(
+                child: Text('Other'),
+              )),
+        ],
+        (value) => Provider.of<AddAnimalsController>(context, listen: false)
+            .animalTypeID = value as int);
+  }
+
+  DecoratedBox _dropdown(
+      BuildContext context,
+      int? valueToWatch,
+      List<DropdownMenuItem<int>> dropDownMenuItems,
+      Function(int? value) onChangedMethod) {
     return DecoratedBox(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           border: Border.all(
               width: 3, color: Theme.of(context).secondaryHeaderColor),
           borderRadius: BorderRadius.circular(50)),
-      child: DropdownButton(
+      child: DropdownButton<int?>(
         isExpanded: true,
         dropdownColor: Theme.of(context).primaryColor,
         style: const TextStyle(color: Colors.white),
-        value: Provider.of<AddAnimalsController>(context).animalTypeID,
-        items: const [
-          DropdownMenuItem(value: 0, child: Center(child: Text('Cat'))),
-          DropdownMenuItem(value: 1, child: Center(child: Text('Dog'))),
-          DropdownMenuItem(value: 2, child: Center(child: Text('Rabbit'))),
-          DropdownMenuItem(value: 3, child: Center(child: Text('Other'))),
-        ],
-        onChanged: (int? value) => addAnimalsController.setAnimalType(value!),
+        value: valueToWatch,
+        items: dropDownMenuItems,
+        onChanged: (value) {
+          onChangedMethod(value!);
+        },
       ),
     );
   }
