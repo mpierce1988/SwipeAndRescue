@@ -44,7 +44,7 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'animalType': _$AnimalTypeEnumMap[instance.animalType]!,
       'imageURL': instance.imageURL,
       'images': instance.images,
-      'ageGroup': instance.ageGroup,
+      'ageGroup': instance.ageGroup.toJson(),
       'behaviours': instance.behaviours,
       'breed': instance.breed,
       'colour': instance.colour,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
+import 'package:swipeandrescue/models/success_state.dart';
+import 'package:swipeandrescue/services/data_service.dart';
 
 class AddAnimalsController extends ChangeNotifier {
   AnimalType animalType = AnimalType.other;
@@ -190,5 +192,89 @@ class AddAnimalsController extends ChangeNotifier {
     }
 
     return null;
+  }
+
+  clearFormFields() {
+    nameTextEditingController.text = '';
+    animalType = AnimalType.other;
+    sex = Sex.unknown;
+    ageMonths = 0;
+    ageYears = 0;
+    colour = 0;
+    secondaryColour = 0;
+    behaviours = [];
+    breeds = [];
+    medical = [];
+    description.text = '';
+    images = [];
+  }
+
+  /// Submits the animal and images to the database, and returns a success state
+  /// as a response
+  Future<SuccessState> submitAnimal(BuildContext context) async {
+    // create animal model
+    Animal animal = Animal();
+    // set the fields
+
+    List<String> newBehaviours = [];
+    for (TextEditingController behaveController in behaviours) {
+      if (behaveController.text != '') {
+        newBehaviours.add(behaveController.text);
+      }
+    }
+
+    List<String> newBreeds = [];
+    for (TextEditingController breedController in breeds) {
+      if (breedController.text != '') {
+        newBreeds.add(breedController.text);
+      }
+    }
+
+    List<String> newMedical = [];
+    for (TextEditingController medicalController in medical) {
+      if (medicalController.text != '') {
+        newMedical.add(medicalController.text);
+      }
+    }
+
+    animal.name = nameTextEditingController.text;
+    animal.animalType = animalType;
+    animal.sex = sex;
+    animal.ageGroup = AgeGroup(years: ageYears, months: ageMonths);
+    animal.colour = _colour.name();
+    animal.secondaryColour = _secondaryColour.name();
+    animal.behaviours = newBehaviours;
+    animal.breed = newBreeds;
+    animal.medical = newMedical;
+    animal.description = description.text;
+    animal.neutered = isNeuteured;
+
+    var error;
+    // submit as new animal
+    DataService dataService = DataService();
+    SuccessState successState =
+        await dataService.addAnimal(animal, images).catchError((e) {
+      return SuccessState.failed;
+    });
+
+    // display error message if
+    // if (successState == SuccessState.failed) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) {
+    //         return AlertDialog(
+    //           title: const Text('An error has occured'),
+    //           content: SingleChildScrollView(
+    //               child: Column(
+    //             children: [
+    //               const Text('The following error has occured:'),
+    //               Text(error.toString()),
+    //             ],
+    //           )),
+    //         );
+    //       });
+    // }
+
+    return successState;
   }
 }

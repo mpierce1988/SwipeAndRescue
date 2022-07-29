@@ -148,6 +148,10 @@ class AddAnimalsScreen extends StatelessWidget {
                                 return;
                               } else if (formKey.currentState!.validate()) {
                                 // submit animal
+                                _showProcessingSubmitionDialog(
+                                    context,
+                                    Provider.of<AddAnimalsController>(context,
+                                        listen: false));
                                 debugPrint('Add animal form passed validation');
                                 return;
                               }
@@ -163,6 +167,90 @@ class AddAnimalsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  _showProcessingSubmitionDialog(
+      BuildContext context, AddAnimalsController addAnimalsController) {
+    bool dialogBoxActive = false;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder(
+            future: addAnimalsController.submitAnimal(context),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              // get rid of current dialog box, if any
+              if (dialogBoxActive) {
+                Navigator.pop(context);
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                dialogBoxActive = true;
+                // show waiting dialog box
+                return const AlertDialog(
+                  title: Text('Submitting'),
+                  content: CircularProgressIndicator.adaptive(),
+                );
+              } else if (snapshot.hasError) {
+                dialogBoxActive = true;
+                return AlertDialog(
+                  title: const Text('An error has occured'),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const Text('The following error has occured:'),
+                        Text(snapshot.error.toString()),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        dialogBoxActive = false;
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              } else if (!snapshot.hasData) {
+                // show generic error message
+                return AlertDialog(
+                  title: const Text('An error has occured'),
+                  content: const Text(
+                      'An error has occured. Please contact support.'),
+                  actions: [
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        dialogBoxActive = false;
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              }
+
+              // else, submition was successful
+              return AlertDialog(
+                title: const Text('Submition Successful!'),
+                content: Text(
+                    'Your submition for ${addAnimalsController.nameTextEditingController.text} was successful!'),
+                actions: [
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      dialogBoxActive = false;
+                      Navigator.pop(context);
+                      // reset form fields
+                      Provider.of<AddAnimalsController>(context, listen: false)
+                          .clearFormFields();
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        });
   }
 
   _showRequiredFieldsDialog(BuildContext context) {
