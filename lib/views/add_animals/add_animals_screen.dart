@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/add_animals_controller.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
@@ -42,14 +43,15 @@ class AddAnimalsScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           // Name field
-                          const Text('Name:'),
+                          const Text('Name*:'),
                           TextFormField(
                             controller: Provider.of<AddAnimalsController>(
                                     context,
                                     listen: false)
                                 .nameTextEditingController,
                             validator: (value) =>
-                                Provider.of<AddAnimalsController>(context)
+                                Provider.of<AddAnimalsController>(context,
+                                        listen: false)
                                     .validateName(),
                           ),
                           const SizedBox(height: 30),
@@ -110,7 +112,7 @@ class AddAnimalsScreen extends StatelessWidget {
                                 .medical,
                           ),
                           const SizedBox(height: 30),
-                          const Text('Description:'),
+                          const Text('Description*:'),
                           TextFormField(
                             maxLines: null,
                             minLines: 5,
@@ -118,6 +120,13 @@ class AddAnimalsScreen extends StatelessWidget {
                             controller:
                                 Provider.of<AddAnimalsController>(context)
                                     .description,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter a description';
+                              }
+
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 30),
                           const Text('Images:'),
@@ -125,6 +134,28 @@ class AddAnimalsScreen extends StatelessWidget {
                             images: Provider.of<AddAnimalsController>(context)
                                 .images,
                           ),
+                          const SizedBox(height: 30),
+                          ElevatedButton.icon(
+                            icon: const Icon(FontAwesomeIcons.thumbsUp),
+                            label: const Text('Submit Animal'),
+                            onPressed: () {
+                              if (Provider.of<AddAnimalsController>(context,
+                                      listen: false)
+                                  .images
+                                  .isEmpty) {
+                                // show a dialog prompt telling the user to upload at least one image
+                                _showImageRequiredDialog(context);
+                                return;
+                              } else if (formKey.currentState!.validate()) {
+                                // submit animal
+                                debugPrint('Add animal form passed validation');
+                                return;
+                              }
+
+                              // else, show missing required fields dialog
+                              _showRequiredFieldsDialog(context);
+                            },
+                          )
                         ]),
                   )),
             ),
@@ -132,6 +163,58 @@ class AddAnimalsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  _showRequiredFieldsDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Required Fields Missing'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const [
+                  Text('Some required fields are missing information.'),
+                  Text('Please check the form for required fields.')
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  _showImageRequiredDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('No Images'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const [
+                  Text('At least one image is required.'),
+                  Text('Please add an image.')
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   DecoratedBox _secondaryColourDropdown(BuildContext context) {
