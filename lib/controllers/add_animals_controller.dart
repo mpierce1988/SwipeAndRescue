@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
@@ -159,6 +161,25 @@ class AddAnimalsController extends ChangeNotifier {
   set description(TextEditingController controller) {
     _description = controller;
     notifyListeners();
+  }
+
+  List<File> _images = [];
+  List<File> get images => _images;
+  set images(List<File> images) {
+    _images = images;
+    notifyListeners();
+  }
+
+  addImage(File image) {
+    _images.add(image);
+    notifyListeners();
+  }
+
+  removeImage(File image) {
+    if (_images.contains(image)) {
+      _images.remove(image);
+      notifyListeners();
+    }
   }
 
   TextEditingController nameTextEditingController = TextEditingController();
