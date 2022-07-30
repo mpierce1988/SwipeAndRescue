@@ -185,6 +185,7 @@ class AddAnimalsController extends ChangeNotifier {
   }
 
   TextEditingController nameTextEditingController = TextEditingController();
+  ScrollController viewScrollController = ScrollController();
 
   String? validateName() {
     if (nameTextEditingController.text.isEmpty) {
@@ -207,6 +208,10 @@ class AddAnimalsController extends ChangeNotifier {
     medical = [];
     description.text = '';
     images = [];
+
+    // set scroll back to the top
+    viewScrollController.animateTo(0,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeOutQuad);
   }
 
   /// Submits the animal and images to the database, and returns a success state
@@ -256,24 +261,6 @@ class AddAnimalsController extends ChangeNotifier {
         await dataService.addAnimal(animal, images).catchError((e) {
       return SuccessState.failed;
     });
-
-    // display error message if
-    // if (successState == SuccessState.failed) {
-    //   showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) {
-    //         return AlertDialog(
-    //           title: const Text('An error has occured'),
-    //           content: SingleChildScrollView(
-    //               child: Column(
-    //             children: [
-    //               const Text('The following error has occured:'),
-    //               Text(error.toString()),
-    //             ],
-    //           )),
-    //         );
-    //       });
-    // }
 
     return successState;
   }

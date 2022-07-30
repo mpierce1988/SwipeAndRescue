@@ -34,6 +34,7 @@ class AddAnimalsScreen extends StatelessWidget {
               }
             }),
             child: SingleChildScrollView(
+              controller: addAnimalsController.viewScrollController,
               child: Padding(
                   padding: const EdgeInsets.all(30),
                   child: Form(
@@ -178,10 +179,12 @@ class AddAnimalsScreen extends StatelessWidget {
           return FutureBuilder(
             future: addAnimalsController.submitAnimal(context),
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              debugPrint(
+                  "State of Processing Dialog Box: ${snapshot.connectionState.name}");
               // get rid of current dialog box, if any
-              if (dialogBoxActive) {
-                Navigator.pop(context);
-              }
+              //if (dialogBoxActive) {
+              //  Navigator.pop(context);
+              //}
 
               if (snapshot.connectionState == ConnectionState.waiting) {
                 dialogBoxActive = true;
@@ -242,8 +245,7 @@ class AddAnimalsScreen extends StatelessWidget {
                       dialogBoxActive = false;
                       Navigator.pop(context);
                       // reset form fields
-                      Provider.of<AddAnimalsController>(context, listen: false)
-                          .clearFormFields();
+                      addAnimalsController.clearFormFields();
                     },
                   )
                 ],

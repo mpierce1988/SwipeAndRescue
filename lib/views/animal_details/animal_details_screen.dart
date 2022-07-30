@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/controllers/animal_details_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
@@ -72,7 +73,7 @@ class AnimalDetailsScreen extends StatelessWidget {
           Sex sex = animal.data!.sex;
           String imageURL = animal.data!.imageURL;
           AgeGroup ageGroup = animal.data!.ageGroup;
-
+          List<String> images = animal.data!.images;
           List<bool> openPanels = [false, false, false, false, false, false];
 
           return Scaffold(
@@ -90,15 +91,16 @@ class AnimalDetailsScreen extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    Container(
-                      width: 400,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(animal.data!.imageURL),
-                            fit: BoxFit.cover),
-                      ),
-                    ),
+                    // Container(
+                    //   width: 400,
+                    //   height: 200,
+                    //   decoration: BoxDecoration(
+                    //     image: DecorationImage(
+                    //         image: NetworkImage(animal.data!.imageURL),
+                    //         fit: BoxFit.cover),
+                    //   ),
+                    // ),
+                    _animalPicturesCarousel(images),
                     const SizedBox(
                       height: 30,
                     ),
@@ -118,6 +120,22 @@ class AnimalDetailsScreen extends StatelessWidget {
             ),
           );
         });
+  }
+
+  CarouselSlider _animalPicturesCarousel(List<String> images) {
+    return CarouselSlider.builder(
+        itemCount: images.length,
+        itemBuilder: (BuildContext context, int index, int realIndex) {
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(images[index]),
+              ),
+            ),
+          );
+        },
+        options: CarouselOptions(height: 300, enableInfiniteScroll: false));
   }
 
   String _getAnimalTypeAsString(AnimalType animalType) {
