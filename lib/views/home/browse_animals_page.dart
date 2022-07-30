@@ -14,13 +14,24 @@ class BrowseAnimalsPage extends StatefulWidget {
 
 class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
     with AutomaticKeepAliveClientMixin {
+  final BrowseAnimalsController browseAnimalsController =
+      BrowseAnimalsController();
+  late Future<List<Animal>> futureAnimals =
+      browseAnimalsController.getAnimals();
+
+  @override
+  void initState() {
+    //futureAnimals = browseAnimalsController.getAnimals();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final BrowseAnimalsController browseAnimalsController =
-        BrowseAnimalsController();
+    // final BrowseAnimalsController browseAnimalsController =
+    //     BrowseAnimalsController();
     return FutureBuilder(
-        future: browseAnimalsController.getAnimals(),
+        future: futureAnimals,
         builder: (context, AsyncSnapshot<List<Animal>> snapshot) {
           debugPrint("Building Browse Animals page...");
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,14 +45,30 @@ class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             // show animal results
-            return _displayAnimals(snapshot.data!);
+            //return _displayAnimals(snapshot.data!);
+            return RefreshIndicator(
+              onRefresh: _pullRefresh,
+              child: _displayAnimals(snapshot.data!),
+            );
           }
 
           // else no results were found
-          return const Center(
-            child: Text('No animals were found, sorry.'),
+          return RefreshIndicator(
+            onRefresh: _pullRefresh,
+            child: ListView(children: const [
+              Center(
+                child: Text('No animals were found, sorry.'),
+              ),
+            ]),
           );
         });
+  }
+
+  Future<void> _pullRefresh() async {
+    List<Animal> newAnimals = await browseAnimalsController.getAnimals();
+    setState(() {
+      futureAnimals = Future.value(newAnimals);
+    });
   }
 
   Widget _browseAnimalsColumn(List<Animal> animals) {

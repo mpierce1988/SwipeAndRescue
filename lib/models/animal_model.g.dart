@@ -36,6 +36,9 @@ Animal _$AnimalFromJson(Map<String, dynamic> json) => Animal(
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],
+      shelterID: json['shelterID'] as String? ?? '',
+      shelterName: json['shelterName'] as String? ?? '',
+      addedByUserID: json['addedByUserID'] as String? ?? '',
     );
 
 Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
@@ -53,6 +56,9 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'medical': instance.medical,
       'neutered': instance.neutered,
       'sex': _$SexEnumMap[instance.sex]!,
+      'shelterID': instance.shelterID,
+      'shelterName': instance.shelterName,
+      'addedByUserID': instance.addedByUserID,
     };
 
 const _$AnimalTypeEnumMap = {

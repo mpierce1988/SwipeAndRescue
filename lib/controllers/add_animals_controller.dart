@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
+import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
 import 'package:swipeandrescue/models/success_state.dart';
+import 'package:swipeandrescue/services/auth_service.dart';
 import 'package:swipeandrescue/services/data_service.dart';
 
 class AddAnimalsController extends ChangeNotifier {
@@ -253,6 +255,13 @@ class AddAnimalsController extends ChangeNotifier {
     animal.medical = newMedical;
     animal.description = description.text;
     animal.neutered = isNeuteured;
+
+    AppUser currentUser = AuthenticationService().appUser;
+    debugPrint(
+        "Current user is ${currentUser.displayName} ${currentUser.userId}at Shelter ${currentUser.shelter!.shelterName} at ${currentUser.shelter!.shelterId}");
+    animal.shelterID = currentUser.shelter!.shelterId;
+    animal.shelterName == currentUser.shelter!.shelterName;
+    animal.addedByUserID = currentUser.userId;
 
     var error;
     // submit as new animal
