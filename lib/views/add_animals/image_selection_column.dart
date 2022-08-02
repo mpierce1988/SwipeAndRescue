@@ -20,30 +20,30 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
   int _currentImageIndex = -1;
   @override
   Widget build(BuildContext context) {
+    debugPrint('Image Count: ${widget.images.length}');
     return Column(
       children: [
-        CarouselSlider.builder(
-          carouselController: carouselController,
-          itemCount: widget.images.length,
-          itemBuilder: (BuildContext context, int index, int realIndex) {
-            if (widget.images.isEmpty) {
-              return Container();
-            }
-            _currentImageIndex = index;
-            return Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: FileImage(widget.images[index]), fit: BoxFit.cover),
-              ),
-            );
-          },
-          options: CarouselOptions(
-              height: 400,
-              enableInfiniteScroll: false,
-              onPageChanged: (int index, CarouselPageChangedReason reason) {
-                _currentImageIndex = index;
-              }),
-        ),
+        if (widget.images.isNotEmpty)
+          CarouselSlider.builder(
+            carouselController: carouselController,
+            itemCount: widget.images.length,
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              _currentImageIndex = index;
+              return Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: FileImage(widget.images[index]),
+                      fit: BoxFit.cover),
+                ),
+              );
+            },
+            options: CarouselOptions(
+                height: 400,
+                enableInfiniteScroll: false,
+                onPageChanged: (int index, CarouselPageChangedReason reason) {
+                  _currentImageIndex = index;
+                }),
+          ),
         ElevatedButton.icon(
             onPressed: () {
               getImage(false);

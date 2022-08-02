@@ -72,7 +72,10 @@ class AddAnimalsScreen extends StatelessWidget {
           ]),
       //color: Theme.of(context).canvasColor,
       padding: const EdgeInsets.fromLTRB(60, 0, 60, 20),
-      child: _smallLayout(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 60),
+        child: _smallLayout(context),
+      ),
     );
   }
 
