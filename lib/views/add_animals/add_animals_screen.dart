@@ -22,6 +22,7 @@ class AddAnimalsScreen extends StatelessWidget {
         value: addAnimalsController,
         builder: (context, widget) {
           return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
             appBar: AppBar(
               title: const Text('Add Animal'),
               leading: BackButton(
@@ -36,27 +37,233 @@ class AddAnimalsScreen extends StatelessWidget {
                   currentFocus.unfocus();
                 }
               }),
-              child: SingleChildScrollView(
-                  controller: addAnimalsController.viewScrollController,
-                  child: Form(
-                    autovalidateMode: AutovalidateMode.disabled,
-                    key: formKey,
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      if (constraints.maxWidth <= Constants().mediumWidth) {
-                        // small layout
-                        return _smallLayout(context);
-                      } else if (constraints.maxWidth <=
-                          Constants().largeWidth) {
-                        // medium layout
-                        return _mediumLayout(context);
-                      }
-                      // large layout
-                      return _smallLayout(context);
-                    }),
-                  )),
+              child: Container(
+                color: Theme.of(context).backgroundColor,
+                child: SingleChildScrollView(
+                    controller: addAnimalsController.viewScrollController,
+                    child: Form(
+                      autovalidateMode: AutovalidateMode.disabled,
+                      key: formKey,
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        if (constraints.maxWidth <= Constants().mediumWidth) {
+                          // small layout
+                          return _smallLayout(context);
+                        } else if (constraints.maxWidth <=
+                            Constants().largeWidth) {
+                          // medium layout
+                          return _mediumLayout(context);
+                        }
+                        // large layout
+                        return _largeLayout(context);
+                      }),
+                    )),
+              ),
             ),
           );
         });
+  }
+
+  Widget _largeLayout(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 800,
+        margin: const EdgeInsets.all(60),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              color: Theme.of(context).shadowColor,
+              spreadRadius: 5,
+              blurRadius: 7)
+        ]),
+        padding: const EdgeInsets.fromLTRB(20, 60, 20, 60),
+        child: Column(
+          children: [
+            // name
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Name:'),
+                    SizedBox(
+                      height: 50,
+                      width: 500,
+                      child: _nameField(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            // animal type and sex
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const Text('Animal Type:'),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: _animalDropdown(context),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Text('Sex:'),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: _sexDropdown(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Colour and Secondary Colour
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const Text('Colour:'),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: _colourDropdown(context),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    const Text('Secondary Colour:'),
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: _secondaryColourDropdown(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Age
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Age:'),
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          width: 75,
+                          child: _ageYearsDropdown(context),
+                        ),
+                        const Text('years, '),
+                        SizedBox(
+                          height: 50,
+                          width: 75,
+                          child: _ageMonthsDropdown(context),
+                        ),
+                        const Text('months'),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Breed
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Breed:'),
+                    SizedBox(
+                      width: 300,
+                      child: _breedsColumn(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Behaviours
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Behaviours:'),
+                    SizedBox(
+                      width: 300,
+                      child: _behavioursColumn(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Medical
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Medical:'),
+                    SizedBox(
+                      width: 300,
+                      child: _medicalColumn(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            // Description
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Description:'),
+                    SizedBox(
+                      width: 600,
+                      //height: 200,
+                      child: _descriptionTextField(context),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    const Text('Images:'),
+                    SizedBox(width: 600, child: _imagesCarouselColumn(context)),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 60,
+            ),
+            Center(
+              child: SizedBox(
+                  width: 200, height: 50, child: _submitButton(context)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _mediumLayout(BuildContext context) {
