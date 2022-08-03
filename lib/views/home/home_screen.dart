@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     AppUser appUser = Provider.of<AuthenticateController>(context).appUser;
     bool isShelterAdmin = _isShelterAdmin(appUser);
 
+    debugPrint('Home screen is (re)building...');
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth <= Constants().mediumWidth) {
@@ -101,10 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
-      children: [
+      children: const [
         BrowseAnimalsPage(),
-        const FavouritesPage(),
-        const ProfilePage(),
+        FavouritesPage(),
+        ProfilePage(),
       ],
     );
   }
@@ -114,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: [
+        children: const [
           BrowseAnimalsPage(),
-          const FavouritesPage(),
-          const ProfilePage(),
+          FavouritesPage(),
+          ProfilePage(),
         ],
       ),
     );
@@ -127,11 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
-      children: [
+      children: const [
         BrowseAnimalsPage(),
-        const FavouritesPage(),
-        const ProfilePage(),
-        const AdminPage(),
+        FavouritesPage(),
+        ProfilePage(),
+        AdminPage(),
       ],
     );
   }
@@ -141,11 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: [
+        children: const [
           BrowseAnimalsPage(),
-          const FavouritesPage(),
-          const ProfilePage(),
-          const AdminPage(),
+          FavouritesPage(),
+          ProfilePage(),
+          AdminPage(),
         ],
       ),
     );

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/repository/data/data_repository.dart';
 import 'package:swipeandrescue/repository/data/firebase_data_repository.dart';
 
@@ -32,5 +35,10 @@ class DataService {
   // get the first image of an animal, if available. otherwise returns empty string
   Future<String> getFirstAnimalImage(String animalId) async {
     return await _dataRepository.getImageUrl(animalId);
+  }
+
+  Future<SuccessState> addAnimal(Animal animal, List<File> photos) async {
+    SuccessState successState = await _dataRepository.addAnimal(animal, photos);
+    return successState;
   }
 }

@@ -15,7 +15,7 @@ class FirebaseUserRepository implements UserRepository {
   Future<UserAuthInfo> authenticateWithEmail(
       String email, String password) async {
     //try {
-    final credential = await FirebaseAuth.instance
+    await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
     // set user and user stream variables
@@ -110,7 +110,7 @@ class FirebaseUserRepository implements UserRepository {
   Future<UserAuthInfo> registerNewEmailUser(
       String email, String password) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       _user = FirebaseAuth.instance.currentUser;
       _userStream = FirebaseAuth.instance.authStateChanges();
@@ -146,7 +146,7 @@ class FirebaseUserRepository implements UserRepository {
           FirebaseAuth.instance.currentUser!.displayName ?? '';
       appUser.email = FirebaseAuth.instance.currentUser!.email ?? '';
       // update document
-      var user = FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('users')
           .doc(_user!.uid)
           .set(appUser.toJson(), SetOptions(merge: true));
@@ -200,7 +200,7 @@ class FirebaseUserRepository implements UserRepository {
     appUser.favouriteAnimals = [];
     appUser.shelter = Shelter(shelterId: '', shelterName: '');
     // create new document with auto generated ID from auth service
-    final newUser = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .set(appUser.toJson());

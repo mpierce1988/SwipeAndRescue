@@ -21,6 +21,8 @@ class BrowseAnimalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //final ImageProvider imageProvider = Image.network(DataService().getFirstAnimalImage(animal.animalID), );
 
+    debugPrint('Browse Animal Card is (re)building...');
+
     return SizedBox(
       width: width.toDouble(),
       height: height.toDouble(),
@@ -53,9 +55,10 @@ class BrowseAnimalsCard extends StatelessWidget {
 }
 
 class NetworkImageBuilder extends StatefulWidget {
-  String animalID;
+  final String animalID;
 
-  NetworkImageBuilder({Key? key, required this.animalID}) : super(key: key);
+  const NetworkImageBuilder({Key? key, required this.animalID})
+      : super(key: key);
 
   @override
   State<NetworkImageBuilder> createState() => _NetworkImageBuilderState();

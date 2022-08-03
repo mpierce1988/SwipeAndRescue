@@ -45,5 +45,9 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Permission to access the photo library requested to allow for the uploading of images of new animals.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Permission to access the camera requested to allow for the uploading of images of new animals.</string>
 </dict>
 </plist>

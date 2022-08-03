@@ -32,6 +32,13 @@ Animal _$AnimalFromJson(Map<String, dynamic> json) => Animal(
           const [],
       neutered: json['neutered'] as bool? ?? false,
       sex: $enumDecodeNullable(_$SexEnumMap, json['sex']) ?? Sex.unknown,
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      shelterID: json['shelterID'] as String? ?? '',
+      shelterName: json['shelterName'] as String? ?? '',
+      addedByUserID: json['addedByUserID'] as String? ?? '',
     );
 
 Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
@@ -39,7 +46,8 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'name': instance.name,
       'animalType': _$AnimalTypeEnumMap[instance.animalType]!,
       'imageURL': instance.imageURL,
-      'ageGroup': instance.ageGroup,
+      'images': instance.images,
+      'ageGroup': instance.ageGroup.toJson(),
       'behaviours': instance.behaviours,
       'breed': instance.breed,
       'colour': instance.colour,
@@ -48,6 +56,9 @@ Map<String, dynamic> _$AnimalToJson(Animal instance) => <String, dynamic>{
       'medical': instance.medical,
       'neutered': instance.neutered,
       'sex': _$SexEnumMap[instance.sex]!,
+      'shelterID': instance.shelterID,
+      'shelterName': instance.shelterName,
+      'addedByUserID': instance.addedByUserID,
     };
 
 const _$AnimalTypeEnumMap = {

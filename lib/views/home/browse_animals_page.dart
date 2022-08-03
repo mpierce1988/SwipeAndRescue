@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/constants.dart';
+
 import 'package:swipeandrescue/controllers/browse_animals_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/widgets/browse_animals_card.dart';
 
-class BrowseAnimalsPage extends StatelessWidget {
-  BrowseAnimalsPage({Key? key}) : super(key: key);
+class BrowseAnimalsPage extends StatefulWidget {
+  const BrowseAnimalsPage({Key? key}) : super(key: key);
 
+  @override
+  State<BrowseAnimalsPage> createState() => _BrowseAnimalsPageState();
+}
+
+class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
+    with AutomaticKeepAliveClientMixin {
   final BrowseAnimalsController browseAnimalsController =
       BrowseAnimalsController();
+  late Future<List<Animal>> futureAnimals =
+      browseAnimalsController.getAnimals();
+
+  @override
+  void initState() {
+    //futureAnimals = browseAnimalsController.getAnimals();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    // final BrowseAnimalsController browseAnimalsController =
+    //     BrowseAnimalsController();
     return FutureBuilder(
-        future: browseAnimalsController.getAnimals(),
+        future: futureAnimals,
         builder: (context, AsyncSnapshot<List<Animal>> snapshot) {
+          debugPrint("Building Browse Animals page...");
           if (snapshot.connectionState == ConnectionState.waiting) {
             // show circular loading
             return const Center(child: CircularProgressIndicator.adaptive());
@@ -26,14 +45,30 @@ class BrowseAnimalsPage extends StatelessWidget {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             // show animal results
-            return _displayAnimals(snapshot.data!);
+            //return _displayAnimals(snapshot.data!);
+            return RefreshIndicator(
+              onRefresh: _pullRefresh,
+              child: _displayAnimals(snapshot.data!),
+            );
           }
 
           // else no results were found
-          return const Center(
-            child: Text('No animals were found, sorry.'),
+          return RefreshIndicator(
+            onRefresh: _pullRefresh,
+            child: ListView(children: const [
+              Center(
+                child: Text('No animals were found, sorry.'),
+              ),
+            ]),
           );
         });
+  }
+
+  Future<void> _pullRefresh() async {
+    List<Animal> newAnimals = await browseAnimalsController.getAnimals();
+    setState(() {
+      futureAnimals = Future.value(newAnimals);
+    });
   }
 
   Widget _browseAnimalsColumn(List<Animal> animals) {
@@ -90,4 +125,7 @@ class BrowseAnimalsPage extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
