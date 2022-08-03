@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserBottomNavigationBar extends StatefulWidget {
-  int currentPageindex;
-  PageController pageController;
-  Duration animatePageDuration;
-  Curve animagePageCurve;
+  final int currentPageindex;
+  final PageController pageController;
+  final Duration animatePageDuration;
+  final Curve animagePageCurve;
 
-  UserBottomNavigationBar(
+  const UserBottomNavigationBar(
       {Key? key,
       required this.currentPageindex,
       required this.pageController,
@@ -21,12 +21,20 @@ class UserBottomNavigationBar extends StatefulWidget {
 }
 
 class _UserBottomNavigationBarState extends State<UserBottomNavigationBar> {
+  int currentPageIndex = 0;
+
+  @override
+  void initState() {
+    currentPageIndex = widget.currentPageindex;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: widget.currentPageindex,
+      currentIndex: currentPageIndex,
       onTap: (value) {
-        widget.currentPageindex = value.toInt();
+        currentPageIndex = value.toInt();
         widget.pageController.animateToPage(value,
             duration: widget.animatePageDuration,
             curve: widget.animagePageCurve);
@@ -45,12 +53,12 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar> {
 }
 
 class ShelterWorkerBottomNavigationBar extends StatefulWidget {
-  int currentPageindex;
-  PageController pageController;
-  Duration animatePageDuration;
-  Curve animatePageCurve;
+  final int currentPageindex;
+  final PageController pageController;
+  final Duration animatePageDuration;
+  final Curve animatePageCurve;
 
-  ShelterWorkerBottomNavigationBar(
+  const ShelterWorkerBottomNavigationBar(
       {Key? key,
       required this.currentPageindex,
       required this.pageController,
@@ -65,13 +73,21 @@ class ShelterWorkerBottomNavigationBar extends StatefulWidget {
 
 class _ShelterWorkerBottomNavigationBarState
     extends State<ShelterWorkerBottomNavigationBar> {
+  int currentPageIndex = 0;
+
+  @override
+  void initState() {
+    currentPageIndex = widget.currentPageindex;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: widget.currentPageindex,
+      currentIndex: currentPageIndex,
       onTap: (value) {
-        widget.currentPageindex = value.toInt();
+        currentPageIndex = value.toInt();
         widget.pageController.animateToPage(value,
             duration: widget.animatePageDuration,
             curve: widget.animatePageCurve);

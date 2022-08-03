@@ -105,8 +105,7 @@ class AuthenticateController extends ChangeNotifier {
 
   /// Registers a user with email and password
   Future<void> registerWithEmail() async {
-    UserAuthInfo info = await authService.registerNewEmailUser(
-        emailRegistrationTextController.text,
+    await authService.registerNewEmailUser(emailRegistrationTextController.text,
         password1RegistrationTextController.text);
   }
 

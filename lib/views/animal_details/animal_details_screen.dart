@@ -6,7 +6,8 @@ import 'package:swipeandrescue/models/animal_type.dart';
 
 class AnimalDetailsScreen extends StatelessWidget {
   final String animalId;
-  AnimalDetailsController animalDetailsController = AnimalDetailsController();
+  final AnimalDetailsController animalDetailsController =
+      AnimalDetailsController();
 
   AnimalDetailsScreen({Key? key, required this.animalId}) : super(key: key);
 
@@ -69,12 +70,11 @@ class AnimalDetailsScreen extends StatelessWidget {
           List<String> medical = animal.data!.medical.isNotEmpty
               ? animal.data!.medical
               : ['Not Available'];
-          bool neutered = animal.data!.neutered;
+          //bool neutered = animal.data!.neutered;
           Sex sex = animal.data!.sex;
-          String imageURL = animal.data!.imageURL;
+          //String imageURL = animal.data!.imageURL;
           AgeGroup ageGroup = animal.data!.ageGroup;
           List<String> images = animal.data!.images;
-          List<bool> openPanels = [false, false, false, false, false, false];
 
           return Scaffold(
             appBar: AppBar(
@@ -91,22 +91,14 @@ class AnimalDetailsScreen extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    // Container(
-                    //   width: 400,
-                    //   height: 200,
-                    //   decoration: BoxDecoration(
-                    //     image: DecorationImage(
-                    //         image: NetworkImage(animal.data!.imageURL),
-                    //         fit: BoxFit.cover),
-                    //   ),
-                    // ),
                     _animalPicturesCarousel(images),
                     const SizedBox(
                       height: 30,
                     ),
-                    Text(
-                        'Animal Type: ${_getAnimalTypeAsString(animal.data!.animalType)}'),
+                    Text('Animal Type: ${_getAnimalTypeAsString(animalType)}'),
                     Text('Colour: $colour'),
+                    Text('Secondary Colour: $secondaryColour'),
+                    Text('Sex: ${sex.name.split('.').last}'),
                     Text(
                         'Age: ${ageGroup.years} years, ${ageGroup.months} months'),
                     AnimalInfoExpansionList(
@@ -163,12 +155,12 @@ class AnimalDetailsScreen extends StatelessWidget {
 }
 
 class AnimalInfoExpansionList extends StatefulWidget {
-  String description;
-  List<String> behaviour;
-  List<String> breed;
-  List<String> medical;
+  final String description;
+  final List<String> behaviour;
+  final List<String> breed;
+  final List<String> medical;
 
-  AnimalInfoExpansionList(
+  const AnimalInfoExpansionList(
       {Key? key,
       required this.description,
       required this.behaviour,

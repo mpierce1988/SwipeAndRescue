@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserSideNavigationRail extends StatefulWidget {
-  int currentIndex;
-  PageController pageController;
-  UserSideNavigationRail(
+  final int currentIndex;
+  final PageController pageController;
+  const UserSideNavigationRail(
       {Key? key, required this.currentIndex, required this.pageController})
       : super(key: key);
 
@@ -13,14 +13,22 @@ class UserSideNavigationRail extends StatefulWidget {
 }
 
 class _UserSideNavigationRailState extends State<UserSideNavigationRail> {
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    currentIndex = widget.currentIndex;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NavigationRail(
-      selectedIndex: widget.currentIndex,
+      selectedIndex: currentIndex,
       onDestinationSelected: (int index) {
         setState(
           () {
-            widget.currentIndex = index;
+            currentIndex = index;
             widget.pageController.jumpToPage(index);
           },
         );
@@ -38,9 +46,9 @@ class _UserSideNavigationRailState extends State<UserSideNavigationRail> {
 }
 
 class AdminSideNavigationRail extends StatefulWidget {
-  int currentIndex;
-  PageController pageController;
-  AdminSideNavigationRail(
+  final int currentIndex;
+  final PageController pageController;
+  const AdminSideNavigationRail(
       {Key? key, required this.currentIndex, required this.pageController})
       : super(key: key);
 
@@ -50,15 +58,23 @@ class AdminSideNavigationRail extends StatefulWidget {
 }
 
 class AdminSideNavigationRailState extends State<AdminSideNavigationRail> {
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    currentIndex = widget.currentIndex;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NavigationRail(
-      selectedIndex: widget.currentIndex,
+      selectedIndex: currentIndex,
       onDestinationSelected: (int index) {
         setState(
           () {
             widget.pageController.jumpToPage(index);
-            widget.currentIndex = index;
+            currentIndex = index;
           },
         );
       },
