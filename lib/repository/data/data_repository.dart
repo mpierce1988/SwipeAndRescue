@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
 
@@ -20,7 +21,7 @@ abstract class DataRepository {
     return '';
   }
 
-  Future<SuccessState> addAnimal(Animal animal, List<String> photos) async {
+  Future<SuccessState> addAnimal(Animal animal, List<PickedFile> photos) async {
     await Future.delayed(
       const Duration(milliseconds: 200),
     );

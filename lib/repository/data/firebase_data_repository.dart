@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/repository/data/data_repository.dart';
@@ -64,7 +65,8 @@ class FirebaseDataRepository implements DataRepository {
   }
 
   @override
-  Future<SuccessState> addAnimal(Animal animal, List<String> photoUrls) async {
+  Future<SuccessState> addAnimal(
+      Animal animal, List<PickedFile> photoPickedFiles) async {
     try {
       // create new document with randomly generated ID
       final newAnimalRef = _db.collection('animals').doc();
@@ -75,23 +77,18 @@ class FirebaseDataRepository implements DataRepository {
       List<String> imageUrls = [];
       final storageRef = FirebaseStorage.instance.ref();
 
-      // create a list of Uri pointing to internal photo location
-      List<Uri> photos = [];
-
-      for (String url in photoUrls) {
-        photos.add(Uri.parse(url));
-      }
-
-      for (var photo in photos) {
+      //for(int i = 0; i < photos.length; i++)
+      for (int i = 0; i < photoPickedFiles.length; i++) {
         // get reference for new file location in cloud storage
-        Reference imageRef = storageRef
-            .child('images/${animal.animalID}/${photo.pathSegments.last}');
-
-        // create File object from photo uri
-        File file = File.fromUri(photo);
+        Reference imageRef = storageRef.child(
+            'images/${animal.animalID}/${photoPickedFiles[i].path.split('/').last}');
 
         // push file to cloud
-        await imageRef.putFile(file);
+        if (kIsWeb) {
+          await imageRef.putData(await photoPickedFiles[i].readAsBytes());
+        } else {
+          await imageRef.putFile(File(photoPickedFiles[i].path));
+        }
 
         // add url to list of urls
         imageUrls.add(await imageRef.getDownloadURL());

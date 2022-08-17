@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageSelectionColumn extends StatefulWidget {
-  final List<String> images;
+  final List<PickedFile> images;
   const ImageSelectionColumn({Key? key, required this.images})
       : super(key: key);
 
@@ -34,7 +34,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
                 return Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(widget.images[index]),
+                        image: NetworkImage(widget.images[index].path),
                         fit: BoxFit.cover),
                   ),
                 );
@@ -43,7 +43,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
               return Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: FileImage(File(widget.images[index])),
+                      image: FileImage(File(widget.images[index].path)),
                       fit: BoxFit.cover),
                 ),
               );
@@ -70,7 +70,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
         if (widget.images.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
-                String fileToRemove = widget.images[_currentImageIndex];
+                PickedFile fileToRemove = widget.images[_currentImageIndex];
                 // remove file from list
                 widget.images.remove(fileToRemove);
                 // set state to update carousel
@@ -84,19 +84,19 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
 
   Future<void> getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
-    XFile? pickedFile;
+    PickedFile? pickedFile;
     // is user wants to select from gallery
     if (gallery) {
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      pickedFile = await picker.getImage(source: ImageSource.gallery);
     }
     // otherwise use camera
     else {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
+      pickedFile = await picker.getImage(source: ImageSource.camera);
     }
 
     setState(() {
       if (pickedFile != null) {
-        widget.images.add(pickedFile.path);
+        widget.images.add(pickedFile);
       } else {
         // display error message
         debugPrint('Image Picker did not successfully pick a photo');
