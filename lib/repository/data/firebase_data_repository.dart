@@ -64,54 +64,75 @@ class FirebaseDataRepository implements DataRepository {
   }
 
   @override
-  Future<SuccessState> addAnimal(Animal animal, List<File> photos) async {
-    // create new document with randomly generated ID
-    final newAnimalRef = _db.collection('animals').doc();
-    // assign new randon id to the Animal
-    animal.animalID = newAnimalRef.id;
+  Future<SuccessState> addAnimal(Animal animal, List<String> photoUrls) async {
+    try {
+      // create new document with randomly generated ID
+      final newAnimalRef = _db.collection('animals').doc();
+      // assign new randon id to the Animal
+      animal.animalID = newAnimalRef.id;
 
-    // upload images to google cloud, save urls to a list of Strings
-    List<String> imageUrls = [];
-    final storageRef = FirebaseStorage.instance.ref();
+      // upload images to google cloud, save urls to a list of Strings
+      List<String> imageUrls = [];
+      final storageRef = FirebaseStorage.instance.ref();
 
-    for (var photo in photos) {
-      // get reference for new file location in cloud storage
-      Reference imageRef = storageRef
-          .child('images/${animal.animalID}/${photo.uri.pathSegments.last}');
+      // create a list of Uri pointing to internal photo location
+      List<Uri> photos = [];
 
-      // push file to cloud
-      await imageRef.putFile(photo);
-
-      // add url to list of urls
-      imageUrls.add(await imageRef.getDownloadURL());
-    }
-    // add list of image urls to animal
-    animal.images = imageUrls;
-    // set the animal information
-
-    bool updateSuccessful = true;
-
-    await newAnimalRef.set(animal.toJson()).catchError((error) {
-      debugPrint(error.toString());
-      updateSuccessful = false;
-    });
-
-    // success check
-    if (!updateSuccessful) {
-      // delete attempted record
-      await _db.collection('animals').doc(animal.animalID).delete();
-      // delete any images that were uploaded
-      for (File photo in photos) {
-        Reference imageReference = FirebaseStorage.instance
-            .ref()
-            .child('images/${animal.animalID}/${photo.uri.pathSegments.last}');
-        await imageReference.delete();
+      for (String url in photoUrls) {
+        photos.add(Uri.parse(url));
       }
 
+      for (var photo in photos) {
+        // get reference for new file location in cloud storage
+        Reference imageRef = storageRef
+            .child('images/${animal.animalID}/${photo.pathSegments.last}');
+
+        // create File object from photo uri
+        File file = File.fromUri(photo);
+
+        // push file to cloud
+        await imageRef.putFile(file);
+
+        // add url to list of urls
+        imageUrls.add(await imageRef.getDownloadURL());
+      }
+      // add list of image urls to animal
+      animal.images = imageUrls;
+      // set the animal information
+
+      bool updateSuccessful = true;
+
+      await newAnimalRef.set(animal.toJson()).catchError((error) {
+        debugPrint(error.toString());
+        updateSuccessful = false;
+      });
+
+      // success check
+      if (!updateSuccessful) {
+        // delete attempted record
+        await _deleteAnimalFromFirebase(animal);
+
+        return SuccessState.failed;
+      }
+
+      // otherwise, it was successful
+      return SuccessState.succeeded;
+    } catch (e) {
+      debugPrint(e.toString());
+      _deleteAnimalFromFirebase(animal);
       return SuccessState.failed;
     }
+  }
 
-    // otherwise, it was successful
-    return SuccessState.succeeded;
+  Future<void> _deleteAnimalFromFirebase(Animal animal) async {
+    await _db.collection('animals').doc(animal.animalID).delete();
+    // get list of any files added for this animal
+    final storageRef =
+        FirebaseStorage.instance.ref().child('images/${animal.animalID}');
+    final listResult = await storageRef.listAll();
+    // delete any images that were uploaded
+    for (var item in listResult.items) {
+      await item.delete();
+    }
   }
 }

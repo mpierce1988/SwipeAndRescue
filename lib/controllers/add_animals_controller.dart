@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
@@ -167,21 +165,21 @@ class AddAnimalsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<File> _images = [];
-  List<File> get images => _images;
-  set images(List<File> images) {
+  List<String> _images = [];
+  List<String> get images => _images;
+  set images(List<String> images) {
     _images = images;
     notifyListeners();
   }
 
-  addImage(File image) {
-    _images.add(image);
+  addImage(String imageURL) {
+    _images.add(imageURL);
     notifyListeners();
   }
 
-  removeImage(File image) {
-    if (_images.contains(image)) {
-      _images.remove(image);
+  removeImage(String imageURL) {
+    if (_images.contains(imageURL)) {
+      _images.remove(imageURL);
       notifyListeners();
     }
   }

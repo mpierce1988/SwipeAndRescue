@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/repository/data/data_repository.dart';
@@ -37,7 +35,7 @@ class DataService {
     return await _dataRepository.getImageUrl(animalId);
   }
 
-  Future<SuccessState> addAnimal(Animal animal, List<File> photos) async {
+  Future<SuccessState> addAnimal(Animal animal, List<String> photos) async {
     SuccessState successState = await _dataRepository.addAnimal(animal, photos);
     return successState;
   }

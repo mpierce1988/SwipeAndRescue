@@ -1,13 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageSelectionColumn extends StatefulWidget {
-  final List<File> images;
+  final List<String> images;
   const ImageSelectionColumn({Key? key, required this.images})
       : super(key: key);
 
@@ -29,10 +29,21 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
             itemCount: widget.images.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
               _currentImageIndex = index;
+              // show as network image for web
+              if (kIsWeb) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(widget.images[index]),
+                        fit: BoxFit.cover),
+                  ),
+                );
+              }
+              // show as file image for android/ios
               return Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: FileImage(widget.images[index]),
+                      image: FileImage(File(widget.images[index])),
                       fit: BoxFit.cover),
                 ),
               );
@@ -59,7 +70,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
         if (widget.images.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
-                File fileToRemove = widget.images[_currentImageIndex];
+                String fileToRemove = widget.images[_currentImageIndex];
                 // remove file from list
                 widget.images.remove(fileToRemove);
                 // set state to update carousel
@@ -69,14 +80,6 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
               label: const Text("Remove Picture"))
       ],
     );
-  }
-
-  Image convertFileToImage(File picture) {
-    List<int> imageBase64 = picture.readAsBytesSync();
-    String imageAsString = base64Encode(imageBase64);
-    Uint8List uint8list = base64.decode(imageAsString);
-    Image image = Image.memory(uint8list);
-    return image;
   }
 
   Future<void> getImage(bool gallery) async {
@@ -93,9 +96,10 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
 
     setState(() {
       if (pickedFile != null) {
-        widget.images.add(File(pickedFile.path));
+        widget.images.add(pickedFile.path);
       } else {
         // display error message
+        debugPrint('Image Picker did not successfully pick a photo');
       }
     });
   }
