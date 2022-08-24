@@ -132,4 +132,22 @@ class FirebaseDataRepository implements DataRepository {
       await item.delete();
     }
   }
+
+  // Gets a list of Animals for a given shelter ID
+  @override
+  Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
+    // get documents for animals that match the shelter id
+    var result = await _db
+        .collection('animals')
+        .where("shelterID", isEqualTo: shelterID)
+        .get();
+
+    List<Animal> animals = [];
+
+    for (var doc in result.docs) {
+      animals.add(Animal.fromJson(doc.data()));
+    }
+
+    return animals;
+  }
 }

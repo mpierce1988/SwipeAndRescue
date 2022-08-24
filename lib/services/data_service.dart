@@ -40,4 +40,9 @@ class DataService {
     SuccessState successState = await _dataRepository.addAnimal(animal, photos);
     return successState;
   }
+
+  // Returns a list of animals that match the given shelter ID
+  Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
+    return await _dataRepository.getAnimalsByShelterID(shelterID);
+  }
 }

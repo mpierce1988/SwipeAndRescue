@@ -28,4 +28,12 @@ abstract class DataRepository {
 
     return SuccessState.failed;
   }
+
+  Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
+
+    return [];
+  }
 }
