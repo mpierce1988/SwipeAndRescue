@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
+import 'package:swipeandrescue/models/app_user.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
+import 'package:swipeandrescue/models/success_state.dart';
+import 'package:swipeandrescue/services/auth_service.dart';
 
 class AnimalFormFields extends ChangeNotifier {
   AnimalType animalType = AnimalType.other;
@@ -201,5 +204,70 @@ class AnimalFormFields extends ChangeNotifier {
     // set scroll back to the top
     viewScrollController.animateTo(0,
         duration: const Duration(milliseconds: 500), curve: Curves.easeOutQuad);
+  }
+
+  Animal createAnimalFromFormFields() {
+    // create animal model
+    Animal animal = Animal();
+    // set the fields
+
+    List<String> newBehaviours = [];
+    for (TextEditingController behaveController in behaviours) {
+      if (behaveController.text != '') {
+        newBehaviours.add(behaveController.text);
+      }
+    }
+
+    List<String> newBreeds = [];
+    for (TextEditingController breedController in breeds) {
+      if (breedController.text != '') {
+        newBreeds.add(breedController.text);
+      }
+    }
+
+    List<String> newMedical = [];
+    for (TextEditingController medicalController in medical) {
+      if (medicalController.text != '') {
+        newMedical.add(medicalController.text);
+      }
+    }
+
+    animal.name = nameTextEditingController.text;
+    animal.animalType = animalType;
+    animal.sex = sex;
+    animal.ageGroup = AgeGroup(years: ageYears, months: ageMonths);
+    animal.colour = Colour.values[colour].name();
+    animal.secondaryColour = Colour.values[secondaryColour].name();
+    animal.behaviours = newBehaviours;
+    animal.breed = newBreeds;
+    animal.medical = newMedical;
+    animal.description = description.text;
+    animal.neutered = isNeuteured;
+
+    AppUser currentUser = AuthenticationService().appUser;
+    debugPrint(
+        "Current user is ${currentUser.displayName} ${currentUser.userId}at Shelter ${currentUser.shelter!.shelterName} at ${currentUser.shelter!.shelterId}");
+    animal.shelterID = currentUser.shelter!.shelterId;
+    animal.shelterName == currentUser.shelter!.shelterName;
+    animal.addedByUserID = currentUser.userId;
+
+    return animal;
+  }
+
+  Future<SuccessState> submitAnimal(BuildContext context) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    debugPrint(
+        'Trying to use the parent submit animal method; Please use either addAnimals or modifyAnimals child method.');
+
+    return SuccessState.failed;
+  }
+
+  String? validateName() {
+    if (nameTextEditingController.text.isEmpty) {
+      return "Please enter a name";
+    }
+
+    return null;
   }
 }
