@@ -8,9 +8,15 @@ import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/services/auth_service.dart';
 
 class AnimalFormFields extends ChangeNotifier {
-  AnimalType animalType = AnimalType.other;
+  AnimalType _animalType = AnimalType.other;
+  AnimalType get animalType => _animalType;
+  set animalType(AnimalType newAnimalType) {
+    _animalType = newAnimalType;
+    notifyListeners();
+  }
+
   int get animalTypeID {
-    switch (animalType) {
+    switch (_animalType) {
       case AnimalType.cat:
         return 0;
       case AnimalType.dog:
@@ -25,27 +31,33 @@ class AnimalFormFields extends ChangeNotifier {
   set animalTypeID(int id) {
     switch (id) {
       case 0:
-        animalType = AnimalType.cat;
+        _animalType = AnimalType.cat;
         notifyListeners();
         break;
       case 1:
-        animalType = AnimalType.dog;
+        _animalType = AnimalType.dog;
         notifyListeners();
         break;
       case 2:
-        animalType = AnimalType.rabbit;
+        _animalType = AnimalType.rabbit;
         notifyListeners();
         break;
       default:
-        animalType = AnimalType.other;
+        _animalType = AnimalType.other;
         notifyListeners();
         break;
     }
   }
 
-  Sex sex = Sex.unknown;
+  Sex _sex = Sex.unknown;
+  Sex get sex => _sex;
+  set sex(Sex newSex) {
+    _sex = newSex;
+    notifyListeners();
+  }
+
   int get sexID {
-    switch (sex) {
+    switch (_sex) {
       case Sex.female:
         return 0;
       case Sex.male:
@@ -60,19 +72,19 @@ class AnimalFormFields extends ChangeNotifier {
   set sexID(int id) {
     switch (id) {
       case 0:
-        sex = Sex.female;
+        _sex = Sex.female;
         notifyListeners();
         break;
       case 1:
-        sex = Sex.male;
+        _sex = Sex.male;
         notifyListeners();
         break;
       case 2:
-        sex = Sex.unknown;
+        _sex = Sex.unknown;
         notifyListeners();
         break;
       default:
-        sex = Sex.unknown;
+        _sex = Sex.unknown;
         notifyListeners();
         break;
     }
@@ -105,8 +117,14 @@ class AnimalFormFields extends ChangeNotifier {
   }
 
   Colour _colour = Colour.white;
-  int get colour => _colour.index;
-  set colour(int id) {
+  Colour get colour => _colour;
+  set colour(Colour newColour) {
+    _colour = newColour;
+    notifyListeners();
+  }
+
+  int get colourID => _colour.index;
+  set colourID(int id) {
     if (id < 0 || id > Colour.values.length - 1) {
       _colour = Colour.white;
       notifyListeners();
@@ -118,8 +136,14 @@ class AnimalFormFields extends ChangeNotifier {
   }
 
   Colour _secondaryColour = Colour.white;
-  int get secondaryColour => _secondaryColour.index;
-  set secondaryColour(int id) {
+  Colour get secondaryColour => _secondaryColour;
+  set secondaryColour(Colour newSecColour) {
+    _secondaryColour = newSecColour;
+    notifyListeners();
+  }
+
+  int get secondaryColourID => _secondaryColour.index;
+  set secondaryColourID(int id) {
     if (id < 0 || id > Colour.values.length - 1) {
       _secondaryColour = Colour.white;
       notifyListeners();
@@ -189,12 +213,12 @@ class AnimalFormFields extends ChangeNotifier {
 
   clearFormFields() {
     nameTextEditingController.text = '';
-    animalType = AnimalType.other;
-    sex = Sex.unknown;
+    _animalType = AnimalType.other;
+    _sex = Sex.unknown;
     ageMonths = 0;
     ageYears = 0;
-    colour = 0;
-    secondaryColour = 0;
+    colourID = 0;
+    secondaryColourID = 0;
     behaviours = [];
     breeds = [];
     medical = [];
@@ -233,11 +257,11 @@ class AnimalFormFields extends ChangeNotifier {
     }
 
     animal.name = nameTextEditingController.text;
-    animal.animalType = animalType;
-    animal.sex = sex;
+    animal.animalType = _animalType;
+    animal.sex = _sex;
     animal.ageGroup = AgeGroup(years: ageYears, months: ageMonths);
-    animal.colour = Colour.values[colour].name();
-    animal.secondaryColour = Colour.values[secondaryColour].name();
+    animal.colour = Colour.values[colourID].name();
+    animal.secondaryColour = Colour.values[secondaryColourID].name();
     animal.behaviours = newBehaviours;
     animal.breed = newBreeds;
     animal.medical = newMedical;

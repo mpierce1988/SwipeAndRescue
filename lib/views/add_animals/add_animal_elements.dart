@@ -435,7 +435,7 @@ class AddAnimalElements {
   Widget secondaryColourDropdown(
       BuildContext context, AnimalFormFields animalFormFields) {
     return DecoratedDropdown(
-        valueToWatch: animalFormFields.secondaryColour,
+        valueToWatch: animalFormFields.secondaryColourID,
         dropDownMenuItems: [
           for (Colour value in Colour.values)
             DropdownMenuItem(
@@ -457,13 +457,14 @@ class AddAnimalElements {
               ),
             )
         ],
-        onChangedMethod: (value) => animalFormFields.secondaryColour = value!);
+        onChangedMethod: (value) =>
+            animalFormFields.secondaryColourID = value!);
   }
 
   Widget colourDropdown(
       BuildContext context, AnimalFormFields animalFormFields) {
     return DecoratedDropdown(
-        valueToWatch: animalFormFields.colour,
+        valueToWatch: animalFormFields.colourID,
         dropDownMenuItems: [
           for (Colour value in Colour.values)
             DropdownMenuItem(
@@ -485,7 +486,7 @@ class AddAnimalElements {
               ),
             )
         ],
-        onChangedMethod: (value) => animalFormFields.colour = value!);
+        onChangedMethod: (value) => animalFormFields.colourID = value!);
   }
 
   Widget ageYearsDropdown(
