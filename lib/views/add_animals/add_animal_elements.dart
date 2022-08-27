@@ -339,7 +339,7 @@ class AddAnimalElements {
       label: const Text('Submit Animal'),
       onPressed: () {
         if (Provider.of<AnimalFormFields>(context, listen: false)
-            .images
+            .imagesFromPicker
             .isEmpty) {
           // show a dialog prompt telling the user to upload at least one image
           DialogService().showImageRequiredDialog(context);
@@ -360,7 +360,9 @@ class AddAnimalElements {
 
   ImageSelectionColumn _imagesCarouselColumn(BuildContext context) {
     return ImageSelectionColumn(
-      images: Provider.of<AnimalFormFields>(context).images,
+      imagesFromPicker: Provider.of<AnimalFormFields>(context).imagesFromPicker,
+      imagesFromWebUrls:
+          Provider.of<AnimalFormFields>(context).imagesFromWebUrls,
     );
   }
 

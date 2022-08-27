@@ -7,8 +7,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageSelectionColumn extends StatefulWidget {
-  final List<XFile> images;
-  const ImageSelectionColumn({Key? key, required this.images})
+  final List<XFile> imagesFromPicker;
+  final List<String> imagesFromWebUrls;
+  const ImageSelectionColumn(
+      {Key? key,
+      required this.imagesFromPicker,
+      required this.imagesFromWebUrls})
       : super(key: key);
 
   @override
@@ -20,33 +24,23 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
   int _currentImageIndex = -1;
   @override
   Widget build(BuildContext context) {
-    debugPrint('Image Count: ${widget.images.length}');
+    debugPrint('Image Count: ${widget.imagesFromPicker.length}');
     return Column(
       children: [
-        if (widget.images.isNotEmpty)
+        if (widget.imagesFromPicker.isNotEmpty)
           CarouselSlider.builder(
             carouselController: carouselController,
-            itemCount: widget.images.length,
+            itemCount: widget.imagesFromPicker.length +
+                widget.imagesFromWebUrls.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
               _currentImageIndex = index;
               // show as network image for web
               if (kIsWeb) {
-                return Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(widget.images[index].path),
-                        fit: BoxFit.cover),
-                  ),
-                );
+                return _showWebImage(index);
               }
-              // show as file image for android/ios
-              return Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: FileImage(File(widget.images[index].path)),
-                      fit: BoxFit.cover),
-                ),
-              );
+
+              // show as combined web urls and picked images for android/ios
+              return _showDeviceImage(index);
             },
             options: CarouselOptions(
                 height: 400,
@@ -67,12 +61,13 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
             }),
             icon: const Icon(FontAwesomeIcons.images),
             label: const Text("Add from Gallery")),
-        if (widget.images.isNotEmpty)
+        if (widget.imagesFromPicker.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
-                XFile fileToRemove = widget.images[_currentImageIndex];
+                XFile fileToRemove =
+                    widget.imagesFromPicker[_currentImageIndex];
                 // remove file from list
-                widget.images.remove(fileToRemove);
+                widget.imagesFromPicker.remove(fileToRemove);
                 // set state to update carousel
                 setState(() {});
               }),
@@ -80,6 +75,54 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
               label: const Text("Remove Picture"))
       ],
     );
+  }
+
+  Widget _showDeviceImage(int index) {
+    // show web urls first
+    if (index < widget.imagesFromWebUrls.length) {
+      // show web urls
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(widget.imagesFromWebUrls[index]),
+              fit: BoxFit.cover),
+        ),
+      );
+    }
+    // show picked file images
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: FileImage(File(widget
+                .imagesFromPicker[index - widget.imagesFromWebUrls.length]
+                .path)),
+            fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  Widget _showWebImage(int index) {
+    // show web urls first
+    if (index < widget.imagesFromWebUrls.length) {
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(widget.imagesFromWebUrls[index]),
+              fit: BoxFit.cover),
+        ),
+      );
+    } else {
+      // show picked images
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(widget
+                  .imagesFromPicker[index - widget.imagesFromWebUrls.length]
+                  .path),
+              fit: BoxFit.cover),
+        ),
+      );
+    }
   }
 
   Future<void> getImage(bool gallery) async {
@@ -96,7 +139,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
 
     setState(() {
       if (pickedFile != null) {
-        widget.images.add(pickedFile);
+        widget.imagesFromPicker.add(pickedFile);
       } else {
         // display error message
         debugPrint('Image Picker did not successfully pick a photo');

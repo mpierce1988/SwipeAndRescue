@@ -189,22 +189,42 @@ class AnimalFormFields extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<XFile> _images = [];
-  List<XFile> get images => _images;
-  set images(List<XFile> images) {
-    _images = images;
+  // images from image picker
+  List<XFile> _imagesFromPicker = [];
+  List<XFile> get imagesFromPicker => _imagesFromPicker;
+  set imagesFromPicker(List<XFile> images) {
+    _imagesFromPicker = images;
     notifyListeners();
   }
 
-  addImage(XFile imagePickedFile) {
-    _images.add(imagePickedFile);
+  addImageFromPicker(XFile imagePickedFile) {
+    _imagesFromPicker.add(imagePickedFile);
     notifyListeners();
   }
 
-  removeImage(XFile imagePickedFile) {
-    if (_images.contains(imagePickedFile)) {
-      _images.remove(imagePickedFile);
+  removeImageFromPicker(XFile imagePickedFile) {
+    if (_imagesFromPicker.contains(imagePickedFile)) {
+      _imagesFromPicker.remove(imagePickedFile);
       notifyListeners();
+    }
+  }
+
+  // images from the web
+  List<String> _imagesFromWebUrls = [];
+  List<String> get imagesFromWebUrls => _imagesFromWebUrls;
+  set imagesFromWebUrls(List<String> urls) {
+    _imagesFromWebUrls = urls;
+    notifyListeners();
+  }
+
+  addImageFromWebUrl(String url) {
+    _imagesFromWebUrls.add(url);
+    notifyListeners();
+  }
+
+  removeImageFromWebUrl(String url) {
+    if (_imagesFromWebUrls.contains(url)) {
+      _imagesFromWebUrls.remove(url);
     }
   }
 
@@ -223,7 +243,7 @@ class AnimalFormFields extends ChangeNotifier {
     breeds = [];
     medical = [];
     description.text = '';
-    images = [];
+    imagesFromPicker = [];
 
     // set scroll back to the top
     viewScrollController.animateTo(0,

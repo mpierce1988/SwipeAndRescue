@@ -15,7 +15,7 @@ class AddAnimalsController extends AnimalFormFields {
     // submit as new animal
     DataService dataService = DataService();
     SuccessState successState =
-        await dataService.addAnimal(animal, images).catchError((e) {
+        await dataService.addAnimal(animal, imagesFromPicker).catchError((e) {
       return SuccessState.failed;
     });
 
