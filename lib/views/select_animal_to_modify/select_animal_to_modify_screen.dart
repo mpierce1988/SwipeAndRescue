@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/select_animal_to_modify_controller.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
+import 'package:swipeandrescue/views/modify_animal/modify_animal_screen.dart';
 
 class SelectAnimalToModifyScreen extends StatelessWidget {
   const SelectAnimalToModifyScreen({Key? key}) : super(key: key);
@@ -56,6 +57,12 @@ class SelectAnimalToModifyScreen extends StatelessWidget {
             backgroundImage: NetworkImage(
                 selectAnimalToModifyController.animals[index].images[0]),
           ),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ModifyAnimalsScreen(
+                  animal: selectAnimalToModifyController.animals[index]),
+            ));
+          },
         );
       },
     );

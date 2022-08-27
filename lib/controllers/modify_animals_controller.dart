@@ -5,7 +5,7 @@ import 'package:swipeandrescue/models/colours_enum.dart';
 
 class ModifyAnimalsController extends AnimalFormFields {
   Animal animal;
-  List<String> imageUrls = [];
+
   // constructor
   ModifyAnimalsController({required this.animal}) : super() {
     setFieldsFromAnimal();
@@ -23,12 +23,11 @@ class ModifyAnimalsController extends AnimalFormFields {
     breeds = _createTextEditingControllers(animal.breed);
     medical = _createTextEditingControllers(animal.medical);
     isNeuteured = animal.neutered;
+    imagesFromWebUrls = animal.images;
 
     TextEditingController descriptionTextController = TextEditingController();
     descriptionTextController.text = animal.description;
     description = descriptionTextController;
-
-    imageUrls = animal.images;
   }
 
   List<TextEditingController> _createTextEditingControllers(

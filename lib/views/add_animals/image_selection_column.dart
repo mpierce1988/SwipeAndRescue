@@ -24,10 +24,12 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
   int _currentImageIndex = -1;
   @override
   Widget build(BuildContext context) {
-    debugPrint('Image Count: ${widget.imagesFromPicker.length}');
+    debugPrint(
+        'Image Count: ${widget.imagesFromPicker.length + widget.imagesFromWebUrls.length}');
     return Column(
       children: [
-        if (widget.imagesFromPicker.isNotEmpty)
+        if (widget.imagesFromPicker.isNotEmpty ||
+            widget.imagesFromWebUrls.isNotEmpty)
           CarouselSlider.builder(
             carouselController: carouselController,
             itemCount: widget.imagesFromPicker.length +
@@ -36,6 +38,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
               _currentImageIndex = index;
               // show as network image for web
               if (kIsWeb) {
+                debugPrint('Showing web image at index $index...');
                 return _showWebImage(index);
               }
 
@@ -64,10 +67,15 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
         if (widget.imagesFromPicker.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
-                XFile fileToRemove =
-                    widget.imagesFromPicker[_currentImageIndex];
-                // remove file from list
-                widget.imagesFromPicker.remove(fileToRemove);
+                if (_currentImageIndex < widget.imagesFromWebUrls.length) {
+                  // remove web image
+                  widget.imagesFromWebUrls.removeAt(_currentImageIndex);
+                } else {
+                  // remove file from list
+                  widget.imagesFromPicker.removeAt(
+                      _currentImageIndex - widget.imagesFromWebUrls.length);
+                }
+
                 // set state to update carousel
                 setState(() {});
               }),
