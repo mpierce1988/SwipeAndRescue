@@ -66,7 +66,7 @@ class FirebaseDataRepository implements DataRepository {
 
   @override
   Future<SuccessState> addAnimal(
-      Animal animal, List<PickedFile> photoPickedFiles) async {
+      Animal animal, List<XFile> photoPickedFiles) async {
     try {
       // create new document with randomly generated ID
       final newAnimalRef = _db.collection('animals').doc();

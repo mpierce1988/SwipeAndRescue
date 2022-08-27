@@ -189,19 +189,19 @@ class AnimalFormFields extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<PickedFile> _images = [];
-  List<PickedFile> get images => _images;
-  set images(List<PickedFile> images) {
+  List<XFile> _images = [];
+  List<XFile> get images => _images;
+  set images(List<XFile> images) {
     _images = images;
     notifyListeners();
   }
 
-  addImage(PickedFile imagePickedFile) {
+  addImage(XFile imagePickedFile) {
     _images.add(imagePickedFile);
     notifyListeners();
   }
 
-  removeImage(PickedFile imagePickedFile) {
+  removeImage(XFile imagePickedFile) {
     if (_images.contains(imagePickedFile)) {
       _images.remove(imagePickedFile);
       notifyListeners();

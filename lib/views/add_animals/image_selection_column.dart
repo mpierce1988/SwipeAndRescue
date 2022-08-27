@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageSelectionColumn extends StatefulWidget {
-  final List<PickedFile> images;
+  final List<XFile> images;
   const ImageSelectionColumn({Key? key, required this.images})
       : super(key: key);
 
@@ -70,7 +70,7 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
         if (widget.images.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
-                PickedFile fileToRemove = widget.images[_currentImageIndex];
+                XFile fileToRemove = widget.images[_currentImageIndex];
                 // remove file from list
                 widget.images.remove(fileToRemove);
                 // set state to update carousel
@@ -84,14 +84,14 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
 
   Future<void> getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
-    PickedFile? pickedFile;
+    XFile? pickedFile;
     // is user wants to select from gallery
     if (gallery) {
-      pickedFile = await picker.getImage(source: ImageSource.gallery);
+      pickedFile = await picker.pickImage(source: ImageSource.gallery);
     }
     // otherwise use camera
     else {
-      pickedFile = await picker.getImage(source: ImageSource.camera);
+      pickedFile = await picker.pickImage(source: ImageSource.camera);
     }
 
     setState(() {

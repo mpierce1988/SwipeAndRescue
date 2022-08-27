@@ -21,7 +21,7 @@ abstract class DataRepository {
     return '';
   }
 
-  Future<SuccessState> addAnimal(Animal animal, List<PickedFile> photos) async {
+  Future<SuccessState> addAnimal(Animal animal, List<XFile> photos) async {
     await Future.delayed(
       const Duration(milliseconds: 200),
     );

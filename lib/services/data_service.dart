@@ -36,7 +36,7 @@ class DataService {
     return await _dataRepository.getImageUrl(animalId);
   }
 
-  Future<SuccessState> addAnimal(Animal animal, List<PickedFile> photos) async {
+  Future<SuccessState> addAnimal(Animal animal, List<XFile> photos) async {
     SuccessState successState = await _dataRepository.addAnimal(animal, photos);
     return successState;
   }
