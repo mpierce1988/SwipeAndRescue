@@ -339,8 +339,11 @@ class AddAnimalElements {
       label: const Text('Submit Animal'),
       onPressed: () {
         if (Provider.of<AnimalFormFields>(context, listen: false)
-            .imagesFromPicker
-            .isEmpty) {
+                .imagesFromPicker
+                .isEmpty &&
+            Provider.of<AnimalFormFields>(context, listen: false)
+                .imagesFromWebUrls
+                .isEmpty) {
           // show a dialog prompt telling the user to upload at least one image
           DialogService().showImageRequiredDialog(context);
           return;

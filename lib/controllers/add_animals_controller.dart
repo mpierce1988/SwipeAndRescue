@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_form_fields.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
@@ -8,7 +7,7 @@ class AddAnimalsController extends AnimalFormFields {
   /// Submits the animal and images to the database, and returns a success state
   /// as a response
   @override
-  Future<SuccessState> submitAnimal(BuildContext context) async {
+  Future<SuccessState> submitAnimal() async {
     // create animal model
     Animal animal = createAnimalFromFormFields();
 

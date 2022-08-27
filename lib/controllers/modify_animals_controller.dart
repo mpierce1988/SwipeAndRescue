@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:swipeandrescue/models/animal_form_fields.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
+import 'package:swipeandrescue/models/success_state.dart';
+import 'package:swipeandrescue/services/data_service.dart';
 
 class ModifyAnimalsController extends AnimalFormFields {
   Animal animal;
@@ -24,6 +26,7 @@ class ModifyAnimalsController extends AnimalFormFields {
     medical = _createTextEditingControllers(animal.medical);
     isNeuteured = animal.neutered;
     imagesFromWebUrls = animal.images;
+    animalId = animal.animalID;
 
     TextEditingController descriptionTextController = TextEditingController();
     descriptionTextController.text = animal.description;
@@ -41,5 +44,23 @@ class ModifyAnimalsController extends AnimalFormFields {
     }
 
     return results;
+  }
+
+  @override
+  Future<SuccessState> submitAnimal() async {
+    // create animal
+    Animal animal = createAnimalFromFormFields();
+
+    SuccessState result = SuccessState.succeeded;
+
+    // update animal
+    await DataService()
+        .updateAnimal(animal, imagesFromWebUrls, imagesFromPicker)
+        .onError((error, stackTrace) {
+      debugPrint('The following error has occured: ${error.toString()}');
+      result = SuccessState.failed;
+    });
+
+    return result;
   }
 }

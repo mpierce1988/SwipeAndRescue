@@ -150,4 +150,56 @@ class FirebaseDataRepository implements DataRepository {
 
     return animals;
   }
+
+  // Updates an animal, removes any removed images, and adds new images
+  @override
+  Future<void> updateAnimal(Animal animal, List<String> imageUrlsToKeep,
+      List<XFile> photosToAdd) async {
+    final storageRef =
+        FirebaseStorage.instance.ref().child('images/${animal.animalID}');
+
+    // remove images that are not in the imagesUrlsToKeep list
+    final listResult = await storageRef.listAll();
+    for (var item in listResult.items) {
+      for (String imageUrl in imageUrlsToKeep) {
+        if (imageUrl.split('%2F').last.split('?alt').first == item.name) {
+          // item in cloud storage matches item to keep
+          // do nothing
+          debugPrint(
+              'Item ${item.name} matches a requested images to keep. Doing nothing...');
+        } else {
+          // item in cloud storage does not match item to keep
+          // delete item
+          debugPrint(
+              'Item ${item.name} does not match any requested images to keep. Deleting it...');
+          item.delete();
+        }
+      }
+    }
+    // add the new XFile images
+    for (int i = 0; i < photosToAdd.length; i++) {
+      // get reference for new file location in cloud storage
+      Reference imageRef = storageRef.child(
+          'images/${animal.animalID}/${photosToAdd[i].path.split('/').last}');
+
+      // push file to cloud
+      if (kIsWeb) {
+        await imageRef.putData(await photosToAdd[i].readAsBytes());
+      } else {
+        await imageRef.putFile(File(photosToAdd[i].path));
+      }
+    }
+    // add new urls to animal
+    // get new list of images in cloud storage
+    final finalListResult = await storageRef.listAll();
+    List<String> finalImageUrls = [];
+    for (Reference item in finalListResult.items) {
+      finalImageUrls.add(await item.getDownloadURL());
+    }
+    animal.images = finalImageUrls;
+    // update animal document
+    // get reference to the document
+    final docRef = _db.collection('animals').doc(animal.animalID);
+    docRef.set(animal.toJson());
+  }
 }

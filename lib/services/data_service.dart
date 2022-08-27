@@ -45,4 +45,9 @@ class DataService {
   Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
     return await _dataRepository.getAnimalsByShelterID(shelterID);
   }
+
+  Future<void> updateAnimal(Animal animal, List<String> imageUrlsToKeep,
+      List<XFile> imagesToAdd) async {
+    await _dataRepository.updateAnimal(animal, imageUrlsToKeep, imagesToAdd);
+  }
 }

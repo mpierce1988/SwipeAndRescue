@@ -10,7 +10,7 @@ class DialogService {
         context: context,
         builder: (BuildContext context) {
           return FutureBuilder(
-            future: animalFormFields.submitAnimal(context),
+            future: animalFormFields.submitAnimal(),
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
               debugPrint(
                   "State of Processing Dialog Box: ${snapshot.connectionState.name}");

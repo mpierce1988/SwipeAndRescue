@@ -38,7 +38,6 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
               _currentImageIndex = index;
               // show as network image for web
               if (kIsWeb) {
-                debugPrint('Showing web image at index $index...');
                 return _showWebImage(index);
               }
 
@@ -64,7 +63,8 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
             }),
             icon: const Icon(FontAwesomeIcons.images),
             label: const Text("Add from Gallery")),
-        if (widget.imagesFromPicker.isNotEmpty)
+        if (widget.imagesFromPicker.isNotEmpty ||
+            widget.imagesFromWebUrls.isNotEmpty)
           ElevatedButton.icon(
               onPressed: (() {
                 if (_currentImageIndex < widget.imagesFromWebUrls.length) {

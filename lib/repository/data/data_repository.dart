@@ -29,6 +29,13 @@ abstract class DataRepository {
     return SuccessState.failed;
   }
 
+  Future<void> updateAnimal(Animal animal, List<String> imageUrlsToKeep,
+      List<XFile> photosToAdd) async {
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
+  }
+
   Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
     await Future.delayed(
       const Duration(milliseconds: 200),

@@ -8,6 +8,8 @@ import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/services/auth_service.dart';
 
 class AnimalFormFields extends ChangeNotifier {
+  String animalId = '';
+
   AnimalType _animalType = AnimalType.other;
   AnimalType get animalType => _animalType;
   set animalType(AnimalType newAnimalType) {
@@ -244,6 +246,7 @@ class AnimalFormFields extends ChangeNotifier {
     medical = [];
     description.text = '';
     imagesFromPicker = [];
+    animalId = '';
 
     // set scroll back to the top
     viewScrollController.animateTo(0,
@@ -254,6 +257,10 @@ class AnimalFormFields extends ChangeNotifier {
     // create animal model
     Animal animal = Animal();
     // set the fields
+
+    if (animalId != '') {
+      animal.animalID = animalId;
+    }
 
     List<String> newBehaviours = [];
     for (TextEditingController behaveController in behaviours) {
@@ -298,7 +305,7 @@ class AnimalFormFields extends ChangeNotifier {
     return animal;
   }
 
-  Future<SuccessState> submitAnimal(BuildContext context) async {
+  Future<SuccessState> submitAnimal() async {
     await Future.delayed(const Duration(milliseconds: 200));
 
     debugPrint(
