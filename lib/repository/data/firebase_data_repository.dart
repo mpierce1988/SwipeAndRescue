@@ -155,7 +155,7 @@ class FirebaseDataRepository implements DataRepository {
   @override
   Future<void> updateAnimal(Animal animal, List<String> imageUrlsToKeep,
       List<XFile> photosToAdd) async {
-    final storageRef =
+    var storageRef =
         FirebaseStorage.instance.ref().child('images/${animal.animalID}');
 
     // remove images that are not in the imagesUrlsToKeep list
@@ -179,8 +179,8 @@ class FirebaseDataRepository implements DataRepository {
     // add the new XFile images
     for (int i = 0; i < photosToAdd.length; i++) {
       // get reference for new file location in cloud storage
-      Reference imageRef = storageRef.child(
-          'images/${animal.animalID}/${photosToAdd[i].path.split('/').last}');
+      Reference imageRef =
+          storageRef.child('${photosToAdd[i].path.split('/').last}.jpg');
 
       // push file to cloud
       if (kIsWeb) {
@@ -191,6 +191,8 @@ class FirebaseDataRepository implements DataRepository {
     }
     // add new urls to animal
     // get new list of images in cloud storage
+    storageRef =
+        FirebaseStorage.instance.ref().child('images/${animal.animalID}');
     final finalListResult = await storageRef.listAll();
     List<String> finalImageUrls = [];
     for (Reference item in finalListResult.items) {
