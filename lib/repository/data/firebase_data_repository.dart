@@ -196,7 +196,12 @@ class FirebaseDataRepository implements DataRepository {
     final finalListResult = await storageRef.listAll();
     List<String> finalImageUrls = [];
     for (Reference item in finalListResult.items) {
-      finalImageUrls.add(await item.getDownloadURL());
+      String url = await item.getDownloadURL().catchError((e) {
+        return '';
+      });
+      if (url != '') {
+        finalImageUrls.add(url);
+      }
     }
     animal.images = finalImageUrls;
     // update animal document
