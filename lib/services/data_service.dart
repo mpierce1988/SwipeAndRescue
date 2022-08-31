@@ -50,4 +50,8 @@ class DataService {
       List<XFile> imagesToAdd) async {
     await _dataRepository.updateAnimal(animal, imageUrlsToKeep, imagesToAdd);
   }
+
+  Future<void> deleteAnimal(String animalID) async {
+    await _dataRepository.deleteAnimal(animalID);
+  }
 }

@@ -209,4 +209,51 @@ class FirebaseDataRepository implements DataRepository {
     final docRef = _db.collection('animals').doc(animal.animalID);
     docRef.set(animal.toJson());
   }
+
+  // delete the animal document and any images for a given animal id
+  @override
+  Future<void> deleteAnimal(String animalID) async {
+    // check if animal document exists
+    var reference = _db.collection('animals').doc(animalID);
+    var document = await reference.get();
+    if (document.exists) {
+      // delete document
+      await reference.delete();
+    }
+
+    // delete every image for this animal from google storage
+    var storageRef = FirebaseStorage.instance.ref().child('images/$animalID');
+    var listResults = await storageRef.listAll();
+
+    // // delete each item in list results
+    // for (var item in listResults.items) {
+    //   await item.delete();
+    // }
+    // // delete each directory
+    // for (var dir in listResults.prefixes) {
+    //   var list = await dir.listAll();
+    //   for (var item in list.items) {
+    //     item.delete();
+    //   }
+    //   await dir.delete();
+    // }
+
+    // delete all files and directories
+    _deleteAllFiles(listResults);
+  }
+
+  _deleteAllFiles(ListResult listResults) async {
+    if (listResults.items.isNotEmpty) {
+      // delete all items
+      for (var item in listResults.items) {
+        await item.delete();
+      }
+    }
+
+    if (listResults.prefixes.isNotEmpty) {
+      for (var prefix in listResults.prefixes) {
+        _deleteAllFiles(await prefix.listAll());
+      }
+    }
+  }
 }
