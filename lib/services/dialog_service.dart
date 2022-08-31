@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:swipeandrescue/controllers/add_animals_controller.dart';
+import 'package:swipeandrescue/models/animal_form_fields.dart';
 
 class DialogService {
   DialogService();
 
   void showProcessSubmitingDialog(
-      BuildContext context, AddAnimalsController addAnimalsController) {
+      BuildContext context, AnimalFormFields animalFormFields) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return FutureBuilder(
-            future: addAnimalsController.submitAnimal(context),
+            future: animalFormFields.submitAnimal(),
             builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
               debugPrint(
                   "State of Processing Dialog Box: ${snapshot.connectionState.name}");
@@ -62,14 +62,14 @@ class DialogService {
               return AlertDialog(
                 title: const Text('Submition Successful!'),
                 content: Text(
-                    'Your submition for ${addAnimalsController.nameTextEditingController.text} was successful!'),
+                    'Your submition for ${animalFormFields.nameTextEditingController.text} was successful!'),
                 actions: [
                   TextButton(
                     child: const Text('OK'),
                     onPressed: () {
                       Navigator.pop(context);
                       // reset form fields
-                      addAnimalsController.clearFormFields();
+                      animalFormFields.clearFormFields();
                     },
                   )
                 ],

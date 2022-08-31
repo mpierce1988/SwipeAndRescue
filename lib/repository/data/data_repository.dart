@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
 
@@ -22,11 +21,26 @@ abstract class DataRepository {
     return '';
   }
 
-  Future<SuccessState> addAnimal(Animal animal, List<File> photos) async {
+  Future<SuccessState> addAnimal(Animal animal, List<XFile> photos) async {
     await Future.delayed(
       const Duration(milliseconds: 200),
     );
 
     return SuccessState.failed;
+  }
+
+  Future<void> updateAnimal(Animal animal, List<String> imageUrlsToKeep,
+      List<XFile> photosToAdd) async {
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
+  }
+
+  Future<List<Animal>> getAnimalsByShelterID(String shelterID) async {
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
+
+    return [];
   }
 }

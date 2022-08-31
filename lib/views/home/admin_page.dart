@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/views/add_animals/add_animals_screen.dart';
+import 'package:swipeandrescue/views/select_animal_to_modify/select_animal_to_modify_screen.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class AdminPage extends StatelessWidget {
@@ -25,6 +26,16 @@ class AdminPage extends StatelessWidget {
             loginMethod: (context) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => AddAnimalsScreen(),
+              ));
+            },
+          ),
+          LoginButton(
+            color: Colors.red,
+            icon: FontAwesomeIcons.gear,
+            text: 'Modify Animal',
+            loginMethod: (context) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SelectAnimalToModifyScreen(),
               ));
             },
           ),
