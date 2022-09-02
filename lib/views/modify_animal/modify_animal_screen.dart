@@ -21,7 +21,7 @@ class ModifyAnimalsScreen extends StatelessWidget {
         return Scaffold(
             backgroundColor: Theme.of(context).backgroundColor,
             appBar: AppBar(
-              title: const Text('Add Animal'),
+              title: const Text('Modify Animal'),
               leading: BackButton(
                 onPressed: () => Navigator.pop(context),
               ),

@@ -43,4 +43,8 @@ abstract class DataRepository {
 
     return [];
   }
+
+  Future<void> deleteAnimal(String animalID) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
 }

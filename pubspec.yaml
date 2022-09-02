@@ -35,6 +35,7 @@ dependencies:
   firebase_storage: ^10.3.3
   flutter:
     sdk: flutter
+  flutter_multi_select_items: ^0.4.2
   font_awesome_flutter: ^10.1.0
   google_sign_in: ^5.4.0
   image_picker: ^0.8.5+3

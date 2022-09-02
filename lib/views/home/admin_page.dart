@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/views/add_animals/add_animals_screen.dart';
 import 'package:swipeandrescue/views/select_animal_to_modify/select_animal_to_modify_screen.dart';
+import 'package:swipeandrescue/views/select_animals_to_delete/select_animals_to_delete.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class AdminPage extends StatelessWidget {
@@ -36,6 +37,16 @@ class AdminPage extends StatelessWidget {
             loginMethod: (context) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => const SelectAnimalToModifyScreen(),
+              ));
+            },
+          ),
+          LoginButton(
+            color: Colors.red,
+            icon: FontAwesomeIcons.x,
+            text: 'Delete Animals',
+            loginMethod: (context) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SelectAnimalsToDeleteScreen(),
               ));
             },
           ),
