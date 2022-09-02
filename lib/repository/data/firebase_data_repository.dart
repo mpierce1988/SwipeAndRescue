@@ -225,20 +225,6 @@ class FirebaseDataRepository implements DataRepository {
     var storageRef = FirebaseStorage.instance.ref().child('images/$animalID');
     var listResults = await storageRef.listAll();
 
-    // // delete each item in list results
-    // for (var item in listResults.items) {
-    //   await item.delete();
-    // }
-    // // delete each directory
-    // for (var dir in listResults.prefixes) {
-    //   var list = await dir.listAll();
-    //   for (var item in list.items) {
-    //     item.delete();
-    //   }
-    //   await dir.delete();
-    // }
-
-    // delete all files and directories
     _deleteAllFiles(listResults);
   }
 
