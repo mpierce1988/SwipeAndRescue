@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/models/favourite_model.dart';
 import 'package:swipeandrescue/models/success_state.dart';
 import 'package:swipeandrescue/repository/data/data_repository.dart';
 
@@ -241,5 +242,65 @@ class FirebaseDataRepository implements DataRepository {
         _deleteAllFiles(await prefix.listAll());
       }
     }
+  }
+
+  // adds the specified animal to the user's favourites list
+  @override
+  Future<void> favouriteAnimal(String userID, String animalID) async {
+    // check if a favourite already exists. if so, return out of method
+
+    if (await checkIfAnimalIsFavourited(userID, animalID)) {
+      // a favourites entry already exists
+      return;
+    }
+
+    // create reference to favourites collection
+    var storageRef = _db.collection('favourites');
+    // create a new document
+    var favouriteDocument = storageRef.doc();
+    // add the userID and animalID to an instance of Favourite
+    Favourite favourite = Favourite(userID: userID, animalID: animalID);
+
+    // add to document and push to database
+    favouriteDocument.set(favourite.toJson());
+  }
+
+  @override
+  Future<List<Animal>> getFavouriteAnimals(String userID) async {
+    // get list of favourite documents matching this userID
+    var favouriteDocs = await _db
+        .collection('favourites')
+        .where('userID', isEqualTo: userID)
+        .get();
+
+    // check if list of docs is empty
+    if (favouriteDocs.docs.isEmpty) {
+      return [];
+    }
+
+    // loop through favourites documents, retrieve the information for
+    // each animal
+    List<Animal> results = [];
+    for (var favdoc in favouriteDocs.docs) {
+      Favourite favourite = Favourite.fromJson(favdoc.data());
+      Animal animalToAdd = await getAnimal(favourite.animalID);
+      results.add(animalToAdd);
+    }
+
+    return results;
+  }
+
+  @override
+  Future<bool> checkIfAnimalIsFavourited(String userID, String animalID) async {
+    var potentialFavourite = await _db
+        .collection('favourites')
+        .where('userID', isEqualTo: userID)
+        .where('animalID', isEqualTo: animalID)
+        .get();
+    if (potentialFavourite.docs.isEmpty) {
+      return false;
+    }
+
+    return true;
   }
 }

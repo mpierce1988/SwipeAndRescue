@@ -47,4 +47,18 @@ abstract class DataRepository {
   Future<void> deleteAnimal(String animalID) async {
     await Future.delayed(const Duration(milliseconds: 200));
   }
+
+  Future<List<Animal>> getFavouriteAnimals(String userID) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    return [];
+  }
+
+  Future<void> favouriteAnimal(String userID, String animalID) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  Future<bool> checkIfAnimalIsFavourited(String userID, String animalID) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return false;
+  }
 }
