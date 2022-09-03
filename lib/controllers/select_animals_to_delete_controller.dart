@@ -42,6 +42,7 @@ class SelectAnimalsToDeleteController extends ChangeNotifier {
   }
 
   Future<void> deleteSelectedAnimals(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     // check if any animals are selected, if not return
     if (multiSelectController.getSelectedItems().isEmpty) {
       return;
@@ -64,7 +65,7 @@ class SelectAnimalsToDeleteController extends ChangeNotifier {
     }
 
     // display snackbar message
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    scaffoldMessenger.showSnackBar(SnackBar(
         content: Text('You have deleted ${animalIDs.length} animals')));
     // update select animals to delete display
     notifyListeners();
