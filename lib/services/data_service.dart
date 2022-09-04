@@ -54,4 +54,20 @@ class DataService {
   Future<void> deleteAnimal(String animalID) async {
     await _dataRepository.deleteAnimal(animalID);
   }
+
+  Future<void> favouriteAnimal(String userID, String animalID) async {
+    await _dataRepository.favouriteAnimal(userID, animalID);
+  }
+
+  Future<void> unfavouriteAnimal(String userID, String animalID) async {
+    await _dataRepository.unfavouriteAnimal(userID, animalID);
+  }
+
+  Future<bool> checkIfAnimalIsFavourited(String userID, String animalID) async {
+    return await _dataRepository.checkIfAnimalIsFavourited(userID, animalID);
+  }
+
+  Future<List<Animal>> getFavouriteAnimals(String userID) async {
+    return await _dataRepository.getFavouriteAnimals(userID);
+  }
 }
