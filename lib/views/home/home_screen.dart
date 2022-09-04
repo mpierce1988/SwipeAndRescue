@@ -100,55 +100,83 @@ class _HomeScreenState extends State<HomeScreen> {
 // Page Views
 
   PageView _userPageViewSm() {
+    FavouritesPage favouritesPage = FavouritesPage();
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
-      children: const [
-        BrowseAnimalsPage(),
+      children: [
+        const BrowseAnimalsPage(),
         FavouritesPage(),
-        ProfilePage(),
+        const ProfilePage(),
       ],
+      onPageChanged: (id) {
+        if (id == 1) {
+          // refresh favourites page
+          favouritesPage.refresh();
+        }
+      },
     );
   }
 
   Widget _userPageViewLg() {
+    FavouritesPage favouritesPage = FavouritesPage();
     return Expanded(
       child: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: const [
-          BrowseAnimalsPage(),
+        children: [
+          const BrowseAnimalsPage(),
           FavouritesPage(),
-          ProfilePage(),
+          const ProfilePage(),
         ],
+        onPageChanged: (id) {
+          if (id == 1) {
+            // refresh favourites page
+            favouritesPage.refresh();
+          }
+        },
       ),
     );
   }
 
   PageView _shelterAdminPageViewSm() {
+    FavouritesPage favouritesPage = FavouritesPage();
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: _pageController,
-      children: const [
-        BrowseAnimalsPage(),
-        FavouritesPage(),
-        ProfilePage(),
-        AdminPage(),
+      children: [
+        const BrowseAnimalsPage(),
+        favouritesPage,
+        const ProfilePage(),
+        const AdminPage(),
       ],
+      onPageChanged: (id) {
+        if (id == 1) {
+          // refresh favourites page
+          favouritesPage.refresh();
+        }
+      },
     );
   }
 
   Widget _shelterAdminPageViewLg() {
+    FavouritesPage favouritesPage = FavouritesPage();
     return Expanded(
       child: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: const [
-          BrowseAnimalsPage(),
+        children: [
+          const BrowseAnimalsPage(),
           FavouritesPage(),
-          ProfilePage(),
-          AdminPage(),
+          const ProfilePage(),
+          const AdminPage(),
         ],
+        onPageChanged: (id) {
+          if (id == 1) {
+            // refresh favourites page
+            favouritesPage.refresh();
+          }
+        },
       ),
     );
   }

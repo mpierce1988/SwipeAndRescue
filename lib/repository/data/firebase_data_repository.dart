@@ -227,6 +227,16 @@ class FirebaseDataRepository implements DataRepository {
     var listResults = await storageRef.listAll();
 
     _deleteAllFiles(listResults);
+
+    // delete any favourites list references
+    var favouriteSnapshot = await _db
+        .collection('favourites')
+        .where('animalID', isEqualTo: animalID)
+        .get();
+
+    for (var favouriteDoc in favouriteSnapshot.docs) {
+      favouriteDoc.reference.delete();
+    }
   }
 
   _deleteAllFiles(ListResult listResults) async {
@@ -302,5 +312,24 @@ class FirebaseDataRepository implements DataRepository {
     }
 
     return true;
+  }
+
+  // Remove an animal from a user's favourites list
+  @override
+  Future<void> unfavouriteAnimal(String userID, String animalID) async {
+    // get reference to the document
+    var favouriteReference = _db
+        .collection('favourites')
+        .where('userID', isEqualTo: userID)
+        .where('animalID', isEqualTo: animalID);
+
+    var snapshot = await favouriteReference.get();
+
+    // loop through reference, deleting each document
+    // NOTE: there should only be one document, using a loop to
+    // handle if there are zero documents
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
   }
 }

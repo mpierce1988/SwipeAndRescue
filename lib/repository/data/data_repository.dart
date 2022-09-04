@@ -57,6 +57,10 @@ abstract class DataRepository {
     await Future.delayed(const Duration(milliseconds: 500));
   }
 
+  Future<void> unfavouriteAnimal(String userID, String animalID) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+
   Future<bool> checkIfAnimalIsFavourited(String userID, String animalID) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return false;

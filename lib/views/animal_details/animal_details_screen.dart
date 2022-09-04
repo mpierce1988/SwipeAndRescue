@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swipeandrescue/controllers/animal_details_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
+import 'package:swipeandrescue/widgets/favourite_button.dart';
 
 class AnimalDetailsScreen extends StatelessWidget {
   final String animalId;
@@ -95,6 +96,8 @@ class AnimalDetailsScreen extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
+                    FavouriteButton(
+                        animalDetailsController: animalDetailsController),
                     Text('Animal Type: ${_getAnimalTypeAsString(animalType)}'),
                     Text('Colour: $colour'),
                     Text('Secondary Colour: $secondaryColour'),

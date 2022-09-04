@@ -59,6 +59,10 @@ class DataService {
     await _dataRepository.favouriteAnimal(userID, animalID);
   }
 
+  Future<void> unfavouriteAnimal(String userID, String animalID) async {
+    await _dataRepository.unfavouriteAnimal(userID, animalID);
+  }
+
   Future<bool> checkIfAnimalIsFavourited(String userID, String animalID) async {
     return await _dataRepository.checkIfAnimalIsFavourited(userID, animalID);
   }
