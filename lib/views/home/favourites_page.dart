@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/favourites_controller.dart';
+import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
+import 'package:swipeandrescue/views/animal_details/animal_details_screen.dart';
 
 import '../../services/auth_service.dart';
 
@@ -57,21 +59,28 @@ class FavouritesPage extends StatelessWidget {
     return ListView.builder(
         itemCount: Provider.of<FavouritesController>(context).animals.length,
         itemBuilder: (context, id) {
+          Animal animalToShow =
+              Provider.of<FavouritesController>(context).animals[id];
           return ListTile(
-              title: Text(
-                  Provider.of<FavouritesController>(context).animals[id].name),
-              subtitle: Text(Provider.of<FavouritesController>(context)
-                  .animals[id]
-                  .animalType
-                  .toString()
-                  .split('.')
-                  .last),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    Provider.of<FavouritesController>(context)
-                        .animals[id]
-                        .images[0]),
-              ));
+            title: Text(
+                Provider.of<FavouritesController>(context).animals[id].name),
+            subtitle: Text(Provider.of<FavouritesController>(context)
+                .animals[id]
+                .animalType
+                .toString()
+                .split('.')
+                .last),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(animalToShow.images[0]),
+            ),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: ((context) =>
+                        AnimalDetailsScreen(animalId: animalToShow.animalID))))
+                .then((value) {
+              refresh();
+            }),
+          );
         });
   }
 
