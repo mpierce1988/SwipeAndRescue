@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/services/validation_service.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class EmailRegistrationPage extends StatelessWidget {
@@ -14,17 +15,17 @@ class EmailRegistrationPage extends StatelessWidget {
 
     final formKey = GlobalKey<FormState>();
 
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(child: Text('Email Registration')),
-                TextFormField(
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                flex: 1,
+                child: TextFormField(
                   decoration: const InputDecoration(
                       icon: Icon(Icons.email),
                       hintText: 'Please enter your email',
@@ -34,7 +35,10 @@ class EmailRegistrationPage extends StatelessWidget {
                     return ValidationService().validateEmailAddress(value);
                   },
                 ),
-                TextFormField(
+              ),
+              Flexible(
+                flex: 1,
+                child: TextFormField(
                     obscureText: true,
                     decoration: const InputDecoration(
                         icon: Icon(Icons.password),
@@ -45,12 +49,15 @@ class EmailRegistrationPage extends StatelessWidget {
                     validator: (value) {
                       return ValidationService().validatePassword(value);
                     }),
-                TextFormField(
+              ),
+              Flexible(
+                flex: 1,
+                child: TextFormField(
                     obscureText: true,
                     decoration: const InputDecoration(
                         icon: Icon(Icons.password),
                         hintText: 'Please re-enter your Password',
-                        labelText: 'Password *'),
+                        labelText: 'Re-Enter Password *'),
                     controller:
                         authController.password2RegistrationTextController,
                     validator: (value) {
@@ -62,17 +69,20 @@ class EmailRegistrationPage extends StatelessWidget {
                       }
                       return ValidationService().validatePassword(value);
                     }),
-                Row(
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     LoginButton(
-                        color: Colors.blue,
+                        color: CustomColors().primary,
                         icon: Icons.adaptive.arrow_back,
                         text: "Back",
                         loginMethod: (context) =>
                             authController.switchToLoginOptions()),
                     LoginButton(
-                        color: Colors.red,
+                        color: CustomColors().error,
                         icon: Icons.app_registration,
                         text: "Register",
                         loginMethod: (context) {
@@ -82,9 +92,9 @@ class EmailRegistrationPage extends StatelessWidget {
                         }),
                   ],
                 ),
-              ],
-            )),
-      ),
+              ),
+            ],
+          )),
     );
   }
 }

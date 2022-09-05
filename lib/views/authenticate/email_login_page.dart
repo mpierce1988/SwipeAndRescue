@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/services/validation_service.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/widgets/login_button.dart';
 
 class EmailLoginPage extends StatelessWidget {
@@ -15,17 +16,17 @@ class EmailLoginPage extends StatelessWidget {
     AuthenticateController authController =
         Provider.of<AuthenticateController>(context);
 
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(child: Text('Email Login2')),
-                TextFormField(
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                flex: 4,
+                child: TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.email),
@@ -36,7 +37,10 @@ class EmailLoginPage extends StatelessWidget {
                     return ValidationService().validateEmailAddress(value);
                   },
                 ),
-                TextFormField(
+              ),
+              Flexible(
+                flex: 4,
+                child: TextFormField(
                     obscureText: true,
                     decoration: const InputDecoration(
                         icon: Icon(Icons.password),
@@ -46,11 +50,14 @@ class EmailLoginPage extends StatelessWidget {
                     validator: (value) {
                       return ValidationService().validatePassword(value);
                     }),
-                Row(
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     LoginButton(
-                        color: Colors.green,
+                        color: CustomColors().success,
                         icon: FontAwesomeIcons.userCheck,
                         text: "Login",
                         loginMethod: (context) {
@@ -59,22 +66,27 @@ class EmailLoginPage extends StatelessWidget {
                           }
                         }),
                     LoginButton(
-                        color: Colors.red,
+                        color: CustomColors().error,
                         icon: Icons.app_registration,
                         text: "Register",
                         loginMethod: (context) =>
                             authController.switchToEmailRegistration()),
                   ],
                 ),
-                LoginButton(
-                    color: Colors.blue,
-                    icon: Icons.adaptive.arrow_back,
-                    text: "Back",
-                    loginMethod: (context) =>
-                        authController.switchToLoginOptions()),
-              ],
-            )),
-      ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Center(
+                  child: LoginButton(
+                      color: CustomColors().primary,
+                      icon: Icons.adaptive.arrow_back,
+                      text: "Back",
+                      loginMethod: (context) =>
+                          authController.switchToLoginOptions()),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }
