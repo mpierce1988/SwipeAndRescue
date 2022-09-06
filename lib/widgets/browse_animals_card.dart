@@ -2,15 +2,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/models/animal_type.dart';
 import 'package:swipeandrescue/services/data_service.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/animal_details/animal_details_screen.dart';
 
 class BrowseAnimalsCard extends StatelessWidget {
   final Animal animal;
   final int width;
   final int height;
+  double ratio = .8;
 
-  const BrowseAnimalsCard(
+  BrowseAnimalsCard(
       {Key? key,
       required this.animal,
       required this.width,
@@ -19,13 +22,9 @@ class BrowseAnimalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final ImageProvider imageProvider = Image.network(DataService().getFirstAnimalImage(animal.animalID), );
-
-    debugPrint('Browse Animal Card is (re)building...');
-
     return SizedBox(
       width: width.toDouble(),
-      height: height.toDouble(),
+      height: width.toDouble() * ratio,
       child: Card(
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
@@ -41,15 +40,67 @@ class BrowseAnimalsCard extends StatelessWidget {
           child: Column(
             children: [
               Flexible(
-                  flex: 3,
+                  flex: 8,
                   child: NetworkImageBuilder(
                     animalID: animal.animalID,
                   )),
-              Flexible(flex: 1, child: Text(animal.name))
+              Flexible(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Center(child: _avatarImage(animal)),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(animal.name,
+                                style: TextStyle(
+                                    color: CustomColors().textDisplay,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                                '${_getAnimalTypeAsString(animal.animalType)} - ${animal.ageGroup.years} years ${animal.ageGroup.months} months')
+                          ],
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),
       ),
+    );
+  }
+
+  String _getAnimalTypeAsString(AnimalType animalType) {
+    String result = '';
+    switch (animalType) {
+      case AnimalType.cat:
+        result = 'Cat';
+        break;
+      case AnimalType.dog:
+        result = 'Dog';
+        break;
+      case AnimalType.rabbit:
+        result = 'Rabbit';
+        break;
+      case AnimalType.other:
+        result = 'Other';
+        break;
+      default:
+        result = 'Unspecified';
+        break;
+    }
+
+    return result;
+  }
+
+  Widget _avatarImage(Animal animal) {
+    return CircleAvatar(
+      backgroundImage: NetworkImage(animal.images[0]),
+      backgroundColor: CustomColors().success,
     );
   }
 }
@@ -120,8 +171,7 @@ class _NetworkImageBuilderState extends State<NetworkImageBuilder> {
   Widget _networkImage(String url) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
         image: DecorationImage(
           fit: BoxFit.cover,
           // debug just show local image
