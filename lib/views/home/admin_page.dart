@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/add_animals/add_animals_screen.dart';
 import 'package:swipeandrescue/views/select_animal_to_modify/select_animal_to_modify_screen.dart';
 import 'package:swipeandrescue/views/select_animals_to_delete/select_animals_to_delete.dart';
@@ -15,48 +16,84 @@ class AdminPage extends StatelessWidget {
     AuthenticateController authController =
         Provider.of<AuthenticateController>(context);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Text('Admin'),
-          LoginButton(
-            color: Colors.blue,
-            icon: FontAwesomeIcons.plus,
-            text: 'Add Animal',
-            loginMethod: (context) {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AddAnimalsScreen(),
-              ));
-            },
-          ),
-          LoginButton(
-            color: Colors.red,
-            icon: FontAwesomeIcons.gear,
-            text: 'Modify Animal',
-            loginMethod: (context) {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const SelectAnimalToModifyScreen(),
-              ));
-            },
-          ),
-          LoginButton(
-            color: Colors.red,
-            icon: FontAwesomeIcons.x,
-            text: 'Delete Animals',
-            loginMethod: (context) {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const SelectAnimalsToDeleteScreen(),
-              ));
-            },
-          ),
-          LoginButton(
-            color: Colors.green,
-            icon: FontAwesomeIcons.doorOpen,
-            text: 'Logout',
-            loginMethod: authController.signOut,
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Text('Admin',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: CustomColors().textDisplay)),
+                Text(
+                    'Currently Signed In For: ${authController.appUser.shelter!.shelterName}',
+                    style: TextStyle(
+                        fontSize: 16, color: CustomColors().textDisplay)),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: LoginButton(
+                        color: CustomColors().primary,
+                        icon: FontAwesomeIcons.plus,
+                        text: 'Add Animal',
+                        loginMethod: (context) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddAnimalsScreen(),
+                          ));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: LoginButton(
+                        color: CustomColors().success,
+                        icon: FontAwesomeIcons.gear,
+                        text: 'Modify Animal',
+                        loginMethod: (context) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                const SelectAnimalToModifyScreen(),
+                          ));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: LoginButton(
+                        color: CustomColors().error,
+                        icon: FontAwesomeIcons.x,
+                        text: 'Delete Animals',
+                        loginMethod: (context) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                const SelectAnimalsToDeleteScreen(),
+                          ));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
