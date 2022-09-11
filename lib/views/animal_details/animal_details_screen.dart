@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swipeandrescue/controllers/animal_details_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/widgets/favourite_button.dart';
 
 class AnimalDetailsScreen extends StatelessWidget {
@@ -80,6 +81,7 @@ class AnimalDetailsScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text('$name\'s Profile'),
+              backgroundColor: CustomColors().primary,
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -87,7 +89,10 @@ class AnimalDetailsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Center(
-                      child: Text('Hello $name!'),
+                      child: Text('Hello $name!',
+                          style: TextStyle(
+                              color: CustomColors().textDisplay,
+                              fontWeight: FontWeight.w500)),
                     ),
                     const SizedBox(
                       height: 30,
@@ -130,7 +135,8 @@ class AnimalDetailsScreen extends StatelessWidget {
             ),
           );
         },
-        options: CarouselOptions(height: 300, enableInfiniteScroll: false));
+        options: CarouselOptions(
+            height: 300, enableInfiniteScroll: false, enlargeCenterPage: true));
   }
 
   String _getAnimalTypeAsString(AnimalType animalType) {
