@@ -1,9 +1,10 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:swipeandrescue/controllers/animal_details_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/animal_type.dart';
 import 'package:swipeandrescue/theme.dart';
+import 'package:swipeandrescue/utilities.dart';
+import 'package:swipeandrescue/views/animal_details/animal_pictures_carousel.dart';
 import 'package:swipeandrescue/widgets/favourite_button.dart';
 
 class AnimalDetailsScreen extends StatelessWidget {
@@ -88,27 +89,51 @@ class AnimalDetailsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Center(
-                      child: Text('Hello $name!',
-                          style: TextStyle(
-                              color: CustomColors().textDisplay,
-                              fontWeight: FontWeight.w500)),
+                    AnimalImagesCarousel(
+                      images: images,
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    _animalPicturesCarousel(images),
                     const SizedBox(
                       height: 30,
                     ),
                     FavouriteButton(
                         animalDetailsController: animalDetailsController),
-                    Text('Animal Type: ${_getAnimalTypeAsString(animalType)}'),
-                    Text('Colour: $colour'),
-                    Text('Secondary Colour: $secondaryColour'),
-                    Text('Sex: ${sex.name.split('.').last}'),
-                    Text(
-                        'Age: ${ageGroup.years} years, ${ageGroup.months} months'),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          _getAnimalTypeAsString(animalType),
+                          style: TextStyle(
+                              color: CustomColors().primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 38),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Sex: ${sex.name.split('.').last.capitalize()}'),
+                            Text(
+                                'Age: ${ageGroup.years} years, ${ageGroup.months} months'),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Colour: ${colour.capitalize()}'),
+                            Text(
+                                'Secondary Colour: ${secondaryColour.capitalize()}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
                     AnimalInfoExpansionList(
                         description: description,
                         behaviour: behaviours,
@@ -122,22 +147,39 @@ class AnimalDetailsScreen extends StatelessWidget {
         });
   }
 
-  CarouselSlider _animalPicturesCarousel(List<String> images) {
-    return CarouselSlider.builder(
-        itemCount: images.length,
-        itemBuilder: (BuildContext context, int index, int realIndex) {
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(images[index]),
-              ),
-            ),
-          );
-        },
-        options: CarouselOptions(
-            height: 300, enableInfiniteScroll: false, enlargeCenterPage: true));
-  }
+  // Widget _animalPicturesCarousel(List<String> images) {
+  //   int index = 0;
+  //   return Column(
+  //     children: [
+  //       CarouselSlider.builder(
+  //         itemCount: images.length,
+  //         itemBuilder: (BuildContext context, int index, int realIndex) {
+  //           return Container(
+  //             decoration: BoxDecoration(
+  //               image: DecorationImage(
+  //                 fit: BoxFit.cover,
+  //                 image: NetworkImage(images[index]),
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //         options: CarouselOptions(
+  //             height: 300,
+  //             enableInfiniteScroll: false,
+  //             enlargeCenterPage: true,
+  //             onPageChanged: (id, carouselChangeReason) {
+  //               index = id;
+  //             }),
+  //       ),
+  //       CarouselIndicator(
+  //         count: images.length,
+  //         index: index,
+  //         color: CustomColors().grey,
+  //         activeColor: CustomColors().primary,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   String _getAnimalTypeAsString(AnimalType animalType) {
     String result = '';
@@ -188,6 +230,7 @@ class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
   @override
   Widget build(BuildContext context) {
     return ExpansionPanelList(
+      elevation: 8,
       expansionCallback: (panelIndex, isExpanded) {
         setState(() {
           _isOpen[panelIndex] = !isExpanded;
@@ -195,6 +238,7 @@ class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
       },
       children: [
         ExpansionPanel(
+          backgroundColor: CustomColors().disabled,
           isExpanded: _isOpen[0],
           headerBuilder: (BuildContext context, bool state) {
             return const Text('Description');
@@ -202,6 +246,7 @@ class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
           body: Text(widget.description),
         ),
         ExpansionPanel(
+          backgroundColor: CustomColors().disabled,
           isExpanded: _isOpen[1],
           headerBuilder: (BuildContext context, bool state) {
             return const Text('Behaviours');
@@ -214,6 +259,7 @@ class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
               })),
         ),
         ExpansionPanel(
+          backgroundColor: CustomColors().disabled,
           isExpanded: _isOpen[2],
           headerBuilder: (BuildContext context, bool state) {
             return const Text('Breed');
@@ -226,6 +272,7 @@ class _AnimalInfoExpansionListState extends State<AnimalInfoExpansionList> {
               })),
         ),
         ExpansionPanel(
+          backgroundColor: CustomColors().disabled,
           isExpanded: _isOpen[3],
           headerBuilder: (BuildContext context, bool state) {
             return const Text('Medical');
