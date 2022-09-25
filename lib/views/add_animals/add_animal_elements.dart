@@ -5,6 +5,7 @@ import 'package:swipeandrescue/constants.dart';
 import 'package:swipeandrescue/models/animal_form_fields.dart';
 import 'package:swipeandrescue/models/colours_enum.dart';
 import 'package:swipeandrescue/services/dialog_service.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/add_animals/image_selection_column.dart';
 import 'package:swipeandrescue/views/add_animals/text_entry_column.dart';
 import 'package:swipeandrescue/widgets/decorated_dropdown.dart';
@@ -20,7 +21,7 @@ class AddAnimalElements {
   Widget responsiveLayout(
       BuildContext context, ScrollController viewScrollController) {
     return Container(
-      color: Theme.of(context).backgroundColor,
+      color: CustomColors().offWhite,
       child: SingleChildScrollView(
           controller: viewScrollController,
           child: Form(
@@ -63,7 +64,7 @@ class AddAnimalElements {
 
   Widget smallLayout(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: CustomColors().offWhite,
       padding: const EdgeInsets.all(30),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         // Name field
@@ -335,6 +336,8 @@ class AddAnimalElements {
   // elements
   ElevatedButton _submitButton(BuildContext context) {
     return ElevatedButton.icon(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(CustomColors().primary)),
       icon: const Icon(FontAwesomeIcons.thumbsUp),
       label: const Text('Submit Animal'),
       onPressed: () {
@@ -371,6 +374,8 @@ class AddAnimalElements {
 
   TextFormField _descriptionTextField(BuildContext context) {
     return TextFormField(
+      decoration:
+          InputDecoration(filled: true, fillColor: CustomColors().disabled),
       maxLines: null,
       minLines: 5,
       //keyboardType: TextInputType.multiline,
@@ -429,6 +434,8 @@ class AddAnimalElements {
 
   TextFormField _nameField(BuildContext context) {
     return TextFormField(
+      decoration:
+          InputDecoration(filled: true, fillColor: CustomColors().disabled),
       controller:
           Provider.of<AnimalFormFields>(context).nameTextEditingController,
       validator: (value) =>

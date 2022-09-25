@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../theme.dart';
+
 class ImageSelectionColumn extends StatefulWidget {
   final List<XFile> imagesFromPicker;
   final List<String> imagesFromWebUrls;
@@ -51,21 +53,12 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
                   _currentImageIndex = index;
                 }),
           ),
-        ElevatedButton.icon(
-            onPressed: () {
-              getImage(false);
-            },
-            icon: const Icon(FontAwesomeIcons.camera),
-            label: const Text('Add from Camera')),
-        ElevatedButton.icon(
-            onPressed: (() {
-              getImage(true);
-            }),
-            icon: const Icon(FontAwesomeIcons.images),
-            label: const Text("Add from Gallery")),
         if (widget.imagesFromPicker.isNotEmpty ||
             widget.imagesFromWebUrls.isNotEmpty)
           ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().primary)),
               onPressed: (() {
                 if (_currentImageIndex < widget.imagesFromWebUrls.length) {
                   // remove web image
@@ -79,8 +72,27 @@ class _ImageSelectionColumnState extends State<ImageSelectionColumn> {
                 // set state to update carousel
                 setState(() {});
               }),
-              icon: const Icon(FontAwesomeIcons.images),
-              label: const Text("Remove Picture"))
+              icon: const Icon(FontAwesomeIcons.x),
+              label: const Text("Remove Picture")),
+        if (!kIsWeb)
+          ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().primary)),
+              onPressed: () {
+                getImage(false);
+              },
+              icon: const Icon(FontAwesomeIcons.camera),
+              label: const Text('Add from Camera')),
+        ElevatedButton.icon(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(CustomColors().primary)),
+            onPressed: (() {
+              getImage(true);
+            }),
+            icon: const Icon(FontAwesomeIcons.images),
+            label: const Text("Add from Gallery")),
       ],
     );
   }
