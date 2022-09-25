@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/animal_details_controller.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
+import 'package:swipeandrescue/theme.dart';
 
 class FavouriteButton extends StatelessWidget {
   final AnimalDetailsController animalDetailsController;
@@ -35,13 +36,13 @@ class FavouriteButton extends StatelessWidget {
             .isFavourited;
 
     if (isFavourited) {
-      return _createFavouriteButton(context, Colors.blue, Colors.red,
-          'Remove From Favourites', _toggleFavourite);
+      return _createFavouriteButton(context, CustomColors().error,
+          CustomColors().offWhite, 'Unfavourite', _toggleFavourite);
     }
 
     // else, show button as unfavourited
-    return _createFavouriteButton(context, Colors.grey, Colors.white,
-        'Add to Favourites', _toggleFavourite);
+    return _createFavouriteButton(context, CustomColors().primary, Colors.white,
+        'Favourite', _toggleFavourite);
   }
 
   Widget _showFavouriteButtonDisabled(BuildContext context) {
@@ -56,6 +57,7 @@ class FavouriteButton extends StatelessWidget {
       String text,
       Function(BuildContext context) onPressedFunction) {
     return ElevatedButton.icon(
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
       icon: Icon(
         FontAwesomeIcons.heart,
         color: iconColor,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/favourites_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
+import 'package:swipeandrescue/utilities.dart';
 import 'package:swipeandrescue/views/animal_details/animal_details_screen.dart';
 
 import '../../services/auth_service.dart';
@@ -48,9 +49,12 @@ class FavouritesPage extends StatelessWidget {
     // show message if no animals are favourited
     if (Provider.of<FavouritesController>(context).animals.isEmpty) {
       return const Center(
-        child: Text(
-          'No favourite animals. Please add some animals to your favourites list!',
-          textAlign: TextAlign.center,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(36, 0, 36, 0),
+          child: Text(
+              'No favourite animals. Please add some animals to your favourites list!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
       );
     }
@@ -69,7 +73,8 @@ class FavouritesPage extends StatelessWidget {
                 .animalType
                 .toString()
                 .split('.')
-                .last),
+                .last
+                .capitalize()),
             leading: CircleAvatar(
               backgroundImage: NetworkImage(animalToShow.images[0]),
             ),

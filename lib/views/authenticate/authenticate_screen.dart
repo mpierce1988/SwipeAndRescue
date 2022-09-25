@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/models/login_state.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/authenticate/email_login_page.dart';
 import 'package:swipeandrescue/views/authenticate/email_registration_page.dart';
 import 'package:swipeandrescue/views/authenticate/login_page.dart';
@@ -23,6 +24,7 @@ class AuthenticationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        backgroundColor: CustomColors().primary,
       ),
       body: PageView(
         scrollDirection: Axis.vertical,

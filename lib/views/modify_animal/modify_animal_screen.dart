@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/modify_animals_controller.dart';
 import 'package:swipeandrescue/models/animal_form_fields.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/add_animals/add_animal_elements.dart';
 
 class ModifyAnimalsScreen extends StatelessWidget {
@@ -21,6 +22,7 @@ class ModifyAnimalsScreen extends StatelessWidget {
         return Scaffold(
             backgroundColor: Theme.of(context).backgroundColor,
             appBar: AppBar(
+              backgroundColor: CustomColors().primary,
               title: const Text('Modify Animal'),
               leading: BackButton(
                 onPressed: () => Navigator.pop(context),

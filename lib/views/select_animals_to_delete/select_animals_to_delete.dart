@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/select_animals_to_delete_controller.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
+import 'package:swipeandrescue/theme.dart';
 
 class SelectAnimalsToDeleteScreen extends StatelessWidget {
   const SelectAnimalsToDeleteScreen({Key? key}) : super(key: key);
@@ -52,19 +54,27 @@ class SelectAnimalsToDeleteScreen extends StatelessWidget {
         Provider.of<SelectAnimalsToDeleteController>(context);
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: CustomColors().error,
           title: const Text('Delete Animals'),
           actions: [
             ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().error)),
               onPressed: () {
                 _selectDeselectAll(selectAnimalsToDeleteController);
               },
-              child: const Text('Select All'),
+              //child: const Text('Select All'),
+              child: const Icon(FontAwesomeIcons.listCheck),
             ),
             ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().error)),
               onPressed: () {
                 selectAnimalsToDeleteController.deleteSelectedAnimals(context);
               },
-              child: const Text('Delete Selected'),
+              child: const Icon(FontAwesomeIcons.trashCan),
             )
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:swipeandrescue/constants.dart';
 
 import 'package:swipeandrescue/controllers/browse_animals_controller.dart';
 import 'package:swipeandrescue/models/animal_model.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/widgets/browse_animals_card.dart';
 
 class BrowseAnimalsPage extends StatefulWidget {
@@ -74,8 +75,10 @@ class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
   Widget _browseAnimalsColumn(List<Animal> animals) {
     return Container(
       padding: const EdgeInsets.all(12),
-      child: ListView.builder(
+      child: ListView.separated(
         itemCount: animals.length,
+        separatorBuilder: (context, index) =>
+            Divider(color: CustomColors().night),
         itemBuilder: ((context, index) {
           return BrowseAnimalsCard(
             animal: animals[index],

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:swipeandrescue/constants.dart';
 import 'package:swipeandrescue/controllers/authenticate_controller.dart';
 import 'package:swipeandrescue/models/app_user.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/home/admin_page.dart';
 import 'package:swipeandrescue/views/home/browse_animals_page.dart';
 import 'package:swipeandrescue/views/home/favourites_page.dart';
@@ -38,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
         if (constraints.maxWidth <= Constants().mediumWidth) {
           // small layout
           return Scaffold(
-            appBar: AppBar(title: const Text('Home')),
+            appBar: AppBar(
+              title: const Text('Home'),
+              backgroundColor: CustomColors().primary,
+            ),
             body:
                 isShelterAdmin ? _shelterAdminPageViewSm() : _userPageViewSm(),
             bottomNavigationBar: isShelterAdmin

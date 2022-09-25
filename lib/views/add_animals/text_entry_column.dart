@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../theme.dart';
+
 class TextEntryColumn extends StatefulWidget {
   final List<TextEditingController> entries;
 
@@ -29,6 +31,9 @@ class _TextEntryColumnState extends State<TextEntryColumn> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().primary)),
               onPressed: () => setState(() {
                 // only allow up to 6 fields
                 if (widget.entries.length >= 6) return;
@@ -39,6 +44,9 @@ class _TextEntryColumnState extends State<TextEntryColumn> {
               label: const Text('Add Field'),
             ),
             ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(CustomColors().primary)),
               onPressed: (() => setState(() {
                     // do nothing if entries is already empty
                     if (widget.entries.isEmpty) return;

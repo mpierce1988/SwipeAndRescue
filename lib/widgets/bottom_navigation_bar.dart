@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:swipeandrescue/theme.dart';
 
 class UserBottomNavigationBar extends StatefulWidget {
   final int currentPageindex;
@@ -42,7 +43,9 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar> {
       },
       items: const [
         BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.house), label: 'Home'),
+          icon: Icon(FontAwesomeIcons.house),
+          label: 'Home',
+        ),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.heart), label: 'Favourites'),
         BottomNavigationBarItem(
@@ -84,6 +87,8 @@ class _ShelterWorkerBottomNavigationBarState
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      selectedItemColor: CustomColors().primary,
+      unselectedItemColor: CustomColors().night,
       type: BottomNavigationBarType.fixed,
       currentIndex: currentPageIndex,
       onTap: (value) {

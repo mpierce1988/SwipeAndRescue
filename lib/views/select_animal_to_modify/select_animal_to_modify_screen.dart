@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swipeandrescue/controllers/select_animal_to_modify_controller.dart';
 import 'package:swipeandrescue/models/controller_state.dart';
+import 'package:swipeandrescue/theme.dart';
 import 'package:swipeandrescue/views/modify_animal/modify_animal_screen.dart';
 
 class SelectAnimalToModifyScreen extends StatelessWidget {
@@ -15,7 +16,10 @@ class SelectAnimalToModifyScreen extends StatelessWidget {
         SelectAnimalToModifyController selectAnimalToModifyController =
             Provider.of<SelectAnimalToModifyController>(context);
         return Scaffold(
-            appBar: AppBar(title: const Text('Select an Animal to Modify')),
+            appBar: AppBar(
+              title: const Text('Select an Animal to Modify'),
+              backgroundColor: CustomColors().success,
+            ),
             body: _showBodyForState(selectAnimalToModifyController));
       },
     );
