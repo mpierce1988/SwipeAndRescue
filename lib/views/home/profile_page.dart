@@ -26,10 +26,13 @@ class ProfilePage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Hello ${authController.appUser.displayName}!',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18)),
-                const Text('Thank you for using Swipe and Rescue'),
+                Center(
+                  child: Text('Hello ${authController.appUser.displayName}!',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18)),
+                ),
+                const Center(
+                    child: Text('Thank you for using Swipe and Rescue')),
               ],
             ),
             Column(

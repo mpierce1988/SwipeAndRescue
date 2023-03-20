@@ -57,8 +57,12 @@ class _BrowseAnimalsPageState extends State<BrowseAnimalsPage>
           return RefreshIndicator(
             onRefresh: _pullRefresh,
             child: ListView(children: const [
+              SizedBox(height: 60),
               Center(
-                child: Text('No animals were found, sorry.'),
+                child: Text('No animals were found.\nSwipe down to refresh.',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ]),
           );
