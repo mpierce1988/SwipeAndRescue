@@ -1,0 +1,1 @@
+enum SuccessState { succeeded, failed }
